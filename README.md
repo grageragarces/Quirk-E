@@ -9,7 +9,7 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 # Features
 
-- **Drag and Drop Barrier** for quantum circuit like qc.barrier() in qiskit.
+- **Drag and Drop** for quantum circuit like in qiskit.
 
 # Installation
 
