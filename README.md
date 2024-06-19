@@ -7,9 +7,12 @@ The Quirk-E is free to use and modify. However, you must add reference #[2] in c
 
 This work has been supported by the Academy of Finland (project DEQSE 349945).
 
-## Features
+# Features
 
 - **Drag and Drop Barrier** for quantum circuit like qc.barrier() in qiskit.
+
+# Installation
+
 
 # Contributors
 
