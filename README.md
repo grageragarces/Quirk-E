@@ -9,7 +9,7 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 # Features
 
-- **Drag and Drop** for quantum circuit like in qiskit.
+- **Drag and Drop Barrier (Slicer) ** for quantum circuits like in qiskit.
 
 # Installation
 
