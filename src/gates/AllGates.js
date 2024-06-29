@@ -63,6 +63,7 @@ import {VariousZGates} from "./VariousZGates.js"
 import {XorGates} from "./XorGates.js"
 import {ZeroGate} from "./Joke_ZeroGate.js"
 import {seq} from "../base/Seq.js"
+import { SlicerGate } from "./SlicerGate.js"
 
 let Gates = {};
 
@@ -129,6 +130,7 @@ Gates.ZeroGate = ZeroGate;
 Gates.KnownToSerializer = [
     ...Controls.all,
     ...InputGates.all,
+    ...SlicerGate.all,
     MeasurementGate,
     SwapGateHalf,
     SpacerGate,
@@ -347,7 +349,7 @@ Gates.BottomToolboxGroups = [
         hint: 'Scalar',
         gates: [
             SpacerGate, ZeroGate,
-            NeGate, undefined,
+            NeGate, SlicerGate.ofSize(2),
             ImaginaryGate, AntiImaginaryGate,
             SqrtImaginaryGate, AntiSqrtImaginaryGate,
         ]

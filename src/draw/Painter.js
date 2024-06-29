@@ -133,6 +133,26 @@ class Painter {
     }
 
     /**
+     * Draws a dashed line segment between the two points.
+     *
+     * @param {!Point} p1
+     * @param {!Point} p2
+     * @param {=string} color The color of the drawn line.
+     * @param {=number} thickness The thickness of the drawn line.
+     * @param {=int[]} dash line dash options.
+     */
+    strokeDashedLine(p1, p2, color = Config.DEFAULT_STROKE_COLOR, thickness = 1, dash=[2, 2]) {
+        this.ctx.beginPath();
+        this.ctx.setLineDash(dash);
+        this.ctx.moveTo(p1.x, p1.y);
+        this.ctx.lineTo(p2.x, p2.y);
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = thickness;
+        this.ctx.stroke();
+        this.ctx.setLineDash([]);
+    }
+
+    /**
      * Draws the outside of a rectangle.
      * @param {!Rect} rect The rectangular perimeter to stroke.
      * @param {!string=} color The stroke color.
