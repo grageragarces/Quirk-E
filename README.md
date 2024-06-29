@@ -16,6 +16,8 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 # Contributors
 
+- Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)), *University of Jyväskylä*
+- Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)), *University of Jyväskylä*
 
 # Contact
 
