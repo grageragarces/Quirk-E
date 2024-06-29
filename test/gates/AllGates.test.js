@@ -203,7 +203,9 @@ suite.test("knownDoNothingGateFamilies", () => {
         'Density',
         'Bloch',
         // Spacer gate.
-        '…'
+        '…',
+        // Slicer gate
+        "Slicer1"
     ]));
 });
 

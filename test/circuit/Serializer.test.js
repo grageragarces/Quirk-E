@@ -187,6 +187,7 @@ const IDS_THAT_SHOULD_BE_KNOWN = [
     "XDetectControlReset", "YDetectControlReset", "ZDetectControlReset",
     "Swap",
     "…",
+    "Slicer1", "Slicer2","Slicer3", "Slicer4", "Slicer5", "Slicer6", "Slicer7", "Slicer8", "Slicer9", "Slicer10", "Slicer11", "Slicer12", "Slicer13", "Slicer14", "Slicer15", "Slicer16",
     "inputA1", "inputA2", "inputA3", "inputA4", "inputA5", "inputA6", "inputA7", "inputA8", "inputA9", "inputA10", "inputA11", "inputA12", "inputA13", "inputA14", "inputA15", "inputA16",
     "inputB1", "inputB2", "inputB3", "inputB4", "inputB5", "inputB6", "inputB7", "inputB8", "inputB9", "inputB10", "inputB11", "inputB12", "inputB13", "inputB14", "inputB15", "inputB16",
     "inputR1", "inputR2", "inputR3", "inputR4", "inputR5", "inputR6", "inputR7", "inputR8", "inputR9", "inputR10", "inputR11", "inputR12", "inputR13", "inputR14", "inputR15", "inputR16",
