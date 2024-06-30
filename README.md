@@ -19,6 +19,19 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 # Installation
 
+Clone the repository.
+
+git clone [https://github.com/Strilanc/Quirk.git](https://github.com/DEQSE-Project/Quirk-E.git)
+
+cd Quirk-E
+
+npm install
+
+npm run
+
+npm run build
+
+Confirm the output works by opening out/quirk.html with a web browser.
 
 # Contributors
 
