@@ -137,7 +137,7 @@ function initExports(revision, mostRecentStats, obsIsAnyOverlayShowing) {
             try {
                 let circuitDef = fromJsonText_CircuitDefinition(jsonText);
                 if (!circuitDef.isEmpty()) {
-                    return `Quirk with Circuit - ${circuitDef.readableHash()}.html`;
+                    return `Quirk-E with Circuit - ${circuitDef.readableHash()}.html`;
                 }
             } catch (_) {
             }
