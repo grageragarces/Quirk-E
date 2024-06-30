@@ -24,15 +24,15 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 Clone the repository.
 
-`ls` git clone [https://github.com/Strilanc/Quirk.git](Quirk-E.git)
+`git clone [https://github.com/Strilanc/Quirk.git](Quirk-E.git)` 
 
-cd Quirk-E
+`cd Quirk-E`
 
-npm install
+`npm install`
 
-npm run
+`npm run`
 
-npm run build
+`npm run build`
 
 Confirm the output works by opening out/quirk.html with a web browser.
 
