@@ -11,7 +11,10 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 - **Drag and Drop Barrier (Slicer)** for quantum circuits like in qiskit.
 
-- **Dependencies have been updated** resolving several vulnerabilities caused by out of date packages.
+- **Dependencies have been updated** resolving several vulnerabilities caused by out-of-date packages.
+
+![Drag and Drop Barrier (Slicer) Feature](https://github.com/DEQSE-Project/Quirk-E/blob/main/Quirk-E.jpg)
+
 
 # Known issues
 
