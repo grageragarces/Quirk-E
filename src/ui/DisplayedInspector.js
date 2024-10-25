@@ -26,6 +26,7 @@ import {Hand} from "../ui/Hand.js"
 import {Painter} from "../draw/Painter.js"
 import {Rect} from "../math/Rect.js"
 import {Serializer} from "../circuit/Serializer.js"
+import {Histogram} from "./Histogram.js"
 
 class DisplayedInspector {
     /**
@@ -33,9 +34,10 @@ class DisplayedInspector {
      * @param {!DisplayedCircuit} circuitWidget
      * @param {!DisplayedToolbox} displayedToolboxTop
      * @param {!DisplayedToolbox} displayedToolboxBottom
+     * @param {!Histogram} histogram
      * @param {!Hand} hand
      */
-    constructor(drawArea, circuitWidget, displayedToolboxTop, displayedToolboxBottom, hand) {
+    constructor(drawArea, circuitWidget, displayedToolboxTop, displayedToolboxBottom, histogram, hand) {
         /** @type {!DisplayedCircuit} */
         this.displayedCircuit = circuitWidget;
         /** @type {!DisplayedToolbox} */
@@ -43,6 +45,8 @@ class DisplayedInspector {
         /** @type {!DisplayedToolbox} */
         this.displayedToolboxBottom = displayedToolboxBottom.
             withCustomGatesInserted(circuitWidget.circuitDefinition.customGateSet);
+        /** @type {!Histogram} */
+        this.histogram = histogram;
         /** @type {!Hand} */
         this.hand = hand;
         /** @type {!Rect} */
@@ -54,9 +58,8 @@ class DisplayedInspector {
     desiredWidth() {
         return Math.max(
             this.displayedToolboxTop.desiredWidth(),
-            Math.max(
                 this.displayedCircuit.desiredWidth(),
-                this.displayedToolboxBottom.desiredWidth()));
+                this.displayedToolboxBottom.desiredWidth());
     }
 
     /**
@@ -67,7 +70,11 @@ class DisplayedInspector {
 
         this.displayedToolboxTop = this.displayedToolboxTop.withTop(0);
         this.displayedToolboxBottom = this.displayedToolboxBottom.withTop(
-            this.drawArea.bottom() - this.displayedToolboxBottom.desiredHeight());
+            this.displayedCircuit.top + this.displayedCircuit.desiredHeight()
+        );
+        this.histogram = this.histogram.withTop(
+            this.displayedToolboxBottom.top + this.displayedToolboxBottom.desiredHeight()
+        );
     }
 
     /**
@@ -82,11 +89,13 @@ class DisplayedInspector {
             displayedCircuit.top + displayedCircuit.desiredHeight(),
             Gates.BottomToolboxGroups,
             false);
+        let histogram = new Histogram(bottomToolbox.top + bottomToolbox.desiredHeight());
         return new DisplayedInspector(
             drawArea,
             displayedCircuit,
             topToolbox,
             bottomToolbox,
+            histogram,
             Hand.EMPTY);
     }
 
@@ -99,6 +108,7 @@ class DisplayedInspector {
 
         this.displayedToolboxTop.paint(painter, stats, this.hand);
         this.displayedToolboxBottom.paint(painter, stats, this.hand);
+        this.histogram.paint(painter, stats, this.hand);
         this.displayedCircuit.paint(painter, this.hand, stats);
         this._paintHand(painter, stats);
         this._drawHint(painter);
@@ -185,6 +195,7 @@ class DisplayedInspector {
             circuit,
             this.displayedToolboxTop,
             this.displayedToolboxBottom,
+            this.histogram,
             hand);
     }
 
@@ -218,6 +229,7 @@ class DisplayedInspector {
             displayedCircuit,
             this.displayedToolboxTop,
             this.displayedToolboxBottom,
+            this.histogram,
             this.hand);
     }
 
@@ -282,6 +294,7 @@ class DisplayedInspector {
             this.displayedCircuit,
             this.displayedToolboxTop,
             this.displayedToolboxBottom,
+            this.histogram,
             hand);
     }
 
@@ -295,6 +308,7 @@ class DisplayedInspector {
             DisplayedCircuit.empty(this.displayedToolboxTop.desiredHeight()).withCircuit(newCircuitDefinition),
             this.displayedToolboxTop,
             this.displayedToolboxBottom,
+            this.histogram,
             this.hand.withDrop());
     }
 
@@ -305,7 +319,8 @@ class DisplayedInspector {
         let minimumDesired =
             this.displayedToolboxBottom.desiredHeight() +
             this.displayedToolboxTop.desiredHeight() +
-            this.displayedCircuit.desiredHeight();
+            this.displayedCircuit.desiredHeight() + 
+            this.histogram.desiredHeight();
         return Math.max(Config.MINIMUM_CANVAS_HEIGHT, minimumDesired);
     }
 

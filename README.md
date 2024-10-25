@@ -24,7 +24,7 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 
 Clone the repository.
 
-`git clone [https://github.com/Strilanc/Quirk.git](Quirk-E.git)` 
+`git clone https://github.com/DEQSE-Project/Quirk-E` 
 
 `cd Quirk-E`
 
