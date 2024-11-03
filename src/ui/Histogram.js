@@ -6,6 +6,7 @@ import {Hand} from "../ui/Hand.js"
 import {Point} from "../math/Point.js"
 import {Util} from "../base/Util.js"
 import {MathPainter} from "../draw/MathPainter.js"
+import {Format} from "../base/Format.js"
 
 class Histogram {
     /**
@@ -25,7 +26,7 @@ class Histogram {
     }
 
     desiredHeight() {
-        return 350;
+        return 360;
     }
     
     desiredWidth() {
@@ -47,7 +48,7 @@ class Histogram {
     histogramArea(painter, num_wires) {
         let margin_top = 10;
         let margin_X = Config.TOOLBOX_MARGIN_X;
-        let margin_bottom = 24 + 10;
+        let margin_bottom = 24 + 20;
 
         let width = num_wires < 5 ? this.desiredWidth() - margin_X : painter.canvas.width - margin_X * 2;
         let height = this.desiredHeight() - margin_top - margin_bottom;
@@ -108,26 +109,33 @@ class Histogram {
 
             // squared euclidean length, coincidentally the probability.
             let probability = amplitude.norm2(); 
-            let label = `|${Util.bin(index, Util.bitSize(bar_count - 1))}⟩`;
+            let label = `${Util.bin(index, Util.bitSize(bar_count - 1))}`;
 
             let width = area.w / bar_count - padding * (bar_count + 1) / bar_count;
             let x = area.x + index * width + (1 + index) * padding;
 
             if(bar_count <= 32) { // draw label, if there's enough space.
                 painter.printLine(label, new Rect(x, area.bottom(), width, 24), 0.5);
+            } else if (bar_count <= 128) {
+                painter.ctx.save();
+                painter.ctx.translate(x, this.curArea().bottom());
+                painter.ctx.rotate(-Math.PI/2);
+                painter.printLine(label, new Rect(0, 0, this.curArea().bottom() - area.bottom(), width), 0.5, undefined, undefined, undefined, 0.5);
+                painter.ctx.restore();
             }
             
             if(probability > 0) { // do not draw empty bar
                 let height = probability * area.h;
                 let bar = new Rect(x, area.bottom() - height, width, height);
 
-                painter.fillRect(bar, 'black'); // todo bar color
+                painter.fillRect(bar, Config.SUPERPOSITION_MID_COLOR); // todo bar color
 
                 if(hand.hoverPoints().some(point => bar.containsPoint(point))) {
                     painter.strokeRect(bar, 'orange', 2);
                     MathPainter.paintDeferredValueTooltip(painter, bar.x + bar.w, bar.y, 
-                    `Measured chance of ${label} (decimal ${index})`,
-                    `raw: ${(probability * 100).toFixed(4)}%`);
+                    `Measured chance of |${label}⟩ (decimal ${index})`,
+                    `raw: ${(probability * 100).toFixed(4)}%`,
+                    `amplitude: ${amplitude.toString(new Format(false, 0, 5, ", "))}`)
                 }
             } 
         });
