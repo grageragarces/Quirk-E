@@ -147,12 +147,17 @@ class Histogram {
      * @param {!Hand} hand
      */
     paint(painter, stats, hand) {
-        let area = this.histogramArea(painter, stats.circuitDefinition.numWires);
+        let { numWires } = stats.circuitDefinition;
+        let area = this.histogramArea(painter, numWires);
 
         this.drawTitle(painter, area);
         this.drawAxeNumbers(painter, area);
         this.drawAxes(painter, area);
-        this.drawBars(painter, hand, stats, area);
+        if(numWires <= 7) { // don't draw bars with more than 7 wires
+            this.drawBars(painter, hand, stats, area);
+        } else {
+            painter.printLine("Histogram not available for more than 7 wires.", area, 0.5, undefined, 16, undefined, 0.5);
+        }
         painter.strokeRect(area); // stroke the rect last so everything appears below it
     }
 }
