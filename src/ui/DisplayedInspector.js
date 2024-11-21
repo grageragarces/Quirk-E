@@ -164,6 +164,15 @@ class DisplayedInspector {
         }
         return undefined;
     }
+    
+    /**
+     * @returns {undefined|Point}
+     */
+    isGateOverlappingHand() {
+        if(this.hand.pos === undefined ||
+            !this.displayedCircuit.findGateOverlappingPos(this.hand.pos)) return false;
+        return this.hand.pos;
+    }
 
     /**
      * @returns {undefined|!DisplayedInspector}

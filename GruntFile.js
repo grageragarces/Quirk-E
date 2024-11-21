@@ -171,12 +171,14 @@ module.exports = function(grunt) {
         var forgePart = grunt.file.read('html/forge.partial.html');
         var exportPart = grunt.file.read('html/export.partial.html');
         var menuPart = grunt.file.read('html/menu.partial.html');
+        var contextMenuPart = grunt.file.read('html/context.partial.html');
         var output = html;
         output = output.split("<!-- INCLUDE SOURCE PART -->").join(js);
         output = output.split("<!-- INCLUDE MENU PART -->").join(menuPart);
         output = output.split("<!-- INCLUDE ERROR PART -->").join(errPart);
         output = output.split("<!-- INCLUDE FORGE PART -->").join(forgePart);
         output = output.split("<!-- INCLUDE EXPORT PART -->").join(exportPart);
+        output = output.split("<!-- INCLUDE CONTEXT PART -->").join(contextMenuPart);
         grunt.file.write(dst, output);
     });
 

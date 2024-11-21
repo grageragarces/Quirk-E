@@ -35,6 +35,7 @@ import {Util} from "./base/Util.js"
 import {initializedWglContext} from "./webgl/WglContext.js"
 import {watchDrags, isMiddleClicking, eventPosRelativeTo} from "./browser/MouseWatcher.js"
 import {ObservableValue, ObservableSource} from "./base/Obs.js"
+import {ContextMenu} from "./ui/ContextMenu.js"
 import {initExports, obsExportsIsShowing} from "./ui/exports.js"
 import {initForge, obsForgeIsShowing} from "./ui/forge.js"
 import {initMenu, obsMenuIsShowing, closeMenu} from "./ui/menu.js"
@@ -179,6 +180,18 @@ canvasDiv.addEventListener('click', ev => {
     }
 });
 
+const contextMenu = new ContextMenu(displayed, revision, syncArea);
+canvasDiv.addEventListener("contextmenu", ev => {
+    // TODO: once selecting multiple gates becomes a thing
+    // this needs to be changed to prioritize that.
+    let curInspector = displayed.get();
+    let point = curInspector.isGateOverlappingHand();
+    if(point) {
+        ev.preventDefault();
+        contextMenu.open(point);
+    }
+});
+
 watchDrags(canvasDiv,
     /**
      * Grab
@@ -252,6 +265,8 @@ watchDrags(canvasDiv,
 
 // Middle-click to delete a gate.
 canvasDiv.addEventListener('mousedown', ev => {
+    contextMenu.close();
+
     if (!isMiddleClicking(ev)) {
         return;
     }
