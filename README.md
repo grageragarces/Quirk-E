@@ -7,16 +7,9 @@ The Quirk-E is free to use and modify. However, you must add reference #[2] in c
 
 Access Quirk-E via:
 
--Web Browser: [quirk-e.dev](https://quirk-e.dev/)
+- **Web Browser:** [quirk-e.dev](https://quirk-e.dev/)
 
--DEQSE Visual Studio Code Extension: [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Microsoft Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam)
-
-
-
-
-
-
-
+- **DEQSE Visual Studio Code Extension:** [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Microsoft Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam) 
 
 This work has been supported by the Academy of Finland (project DEQSE 349945).
 
