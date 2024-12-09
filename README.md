@@ -5,6 +5,9 @@ The Quirk-E tool, which has been presented in [2] (https://doi.org/), adds more 
 
 The Quirk-E is free to use and modify. However, you must add reference #[2] in case of any publication.
 
+Quirk-E is also embedded in the DEQSE Visual Studio Code Extension, designed to enhance the quantum software development experience. The extension is available for download from GitHub and Microsoft Marketplace.
+
+
 Access Quirk-E via:
 
 - **Web Browser:** [quirk-e.dev](https://quirk-e.dev/)
