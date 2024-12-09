@@ -19,6 +19,7 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 # Features
 
 - **Dependencies have been updated** resolving several vulnerabilities caused by out-of-date packages.
+- **Right Click Menu for gates** is added. It has "Duplicate" and "Delete" options.
 
 - **Drag and Drop Barrier (Slicer)** for quantum circuits, enabling precise control over circuit execution flow by defining explicit synchronization points.
 
