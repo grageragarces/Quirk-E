@@ -23,6 +23,7 @@ import {Matrix} from "../math/Matrix.js"
 import {Shaders} from "../webgl/Shaders.js"
 import {Util} from "../base/Util.js"
 import {WglArg} from "../webgl/WglArg.js"
+import {Config} from "../Config.js"
 import {WglConfiguredShader} from "../webgl/WglConfiguredShader.js"
 import {
     Inputs,
@@ -171,11 +172,36 @@ function singleDensityMatrixDisplayMaker(builder) {
     return densityMatrixDisplayMaker_shared(builder).
         setSerializedId("Density").
         markAsDrawerNeedsSingleQubitDensityStats().
-        setDrawer(GatePainting.makeDisplayDrawer(args => {
+        setDrawer(args => {
+            const isColored = localStorage.getItem('colored_ui') === 'true';
+            if (args.positionInCircuit === undefined) {
+                args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+                GatePainting.paintOutline(args);
+                GatePainting.paintResizeTab(args);
+                GatePainting.paintGateSymbol(args);
+                if (args.isHighlighted) {
+                    args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+                    GatePainting.paintOutline(args);
+                    GatePainting.paintGateSymbol(args);
+                }
+                return;
+            }
+            
+            GatePainting.paintResizeTab(args);
+        
+            if (args.isHighlighted) {
+                args.painter.strokeRect(args.rect, 'black', 1.5);
+            }
+        
+            args.painter.ctx.save();
+            args.painter.ctx.globalAlpha *= 0.25;
+            GatePainting.paintResizeTab(args);
+            args.painter.ctx.restore();
+
             let {col, row} = args.positionInCircuit;
             let ρ = args.stats.qubitDensityMatrix(col, row).transpose();
             MathPainter.paintDensityMatrix(args.painter, ρ, args.rect, args.focusPoints);
-        }));
+        });
 }
 
 /**
@@ -200,9 +226,13 @@ function largeDensityMatrixDisplayMaker(span, builder) {
  * @param {!GateDrawParams} args
  */
 const DENSITY_MATRIX_DRAWER_FROM_CUSTOM_STATS = GatePainting.makeDisplayDrawer(args => {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
     let n = args.gate.height;
     let ρ = args.customStats || Matrix.zero(1<<n, 1<<n).times(NaN);
     MathPainter.paintDensityMatrix(args.painter, ρ, args.rect, args.focusPoints);
+    if (args.isHighlighted) {
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+    }
 });
 
 let DensityMatrixDisplayFamily = Gate.buildFamily(1, 8, (span, builder) =>

@@ -17,6 +17,8 @@
 import {GateBuilder} from "../circuit/Gate.js"
 import {ketArgs, ketShaderPermute, ketInputGateShaderCode} from "../circuit/KetShaderUtil.js"
 import {WglConfiguredShader} from "../webgl/WglConfiguredShader.js"
+import {Config} from "../Config.js"
+import {GatePainting} from "../draw/GatePainting.js"
 
 let ComparisonGates = {};
 
@@ -38,6 +40,24 @@ function customComparisonShader(compareCode) {
     return ctx => shader.withArgs(...ketArgs(ctx, 1, ['A', 'B']));
 }
 
+function DRAW_GATE (args) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
+    // Fill the gate with the configured fill color
+    args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+
+    // Highlight the gate if needed (when `args.isHighlighted` is true)
+    if (args.isHighlighted) {
+        args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+    }
+    GatePainting.paintGateSymbol(args);
+    if (args.isInToolbox) {
+        let r = args.rect.shiftedBy(0.5, 0.5);
+        args.painter.strokeLine(r.topRight(), r.bottomRight());
+        args.painter.strokeLine(r.bottomLeft(), r.bottomRight());
+    }
+    args.painter.strokeRect(args.rect, 'black');
+}
+
 ComparisonGates.ALessThanB = new GateBuilder().
     setSerializedId("^A<B").
     setSymbol("⊕A<B").
@@ -45,6 +65,7 @@ ComparisonGates.ALessThanB = new GateBuilder().
     setBlurb("Toggles a qubit if input A is less than input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs < rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a < b ? 1 : 0)).
     gate;
 
@@ -55,6 +76,7 @@ ComparisonGates.ALessThanOrEqualToB = new GateBuilder().
     setBlurb("Toggles a qubit if input A is at most input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs <= rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a <= b ? 1 : 0)).
     gate;
 
@@ -66,6 +88,7 @@ ComparisonGates.AGreaterThanB = new GateBuilder().
     setBlurb("Toggles a qubit if input A is greater than input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs > rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a > b ? 1 : 0)).
     gate;
 
@@ -77,6 +100,7 @@ ComparisonGates.AGreaterThanOrEqualToB = new GateBuilder().
     setBlurb("Toggles a qubit if input A is at least input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs >= rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a >= b ? 1 : 0)).
     gate;
 
@@ -87,6 +111,7 @@ ComparisonGates.AEqualToB = new GateBuilder().
     setBlurb("Toggles a qubit if input A is equal to input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs == rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a === b ? 1 : 0)).
     gate;
 
@@ -98,6 +123,7 @@ ComparisonGates.ANotEqualToB = new GateBuilder().
     setBlurb("Toggles a qubit if input A isn't equal to input B.").
     setRequiredContextKeys("Input Range A", "Input Range B").
     setActualEffectToShaderProvider(customComparisonShader('lhs != rhs')).
+    setDrawer(args => DRAW_GATE(args)).
     setKnownEffectToParametrizedPermutation((v, a, b) => v ^ (a !== b ? 1 : 0)).
     gate;
 

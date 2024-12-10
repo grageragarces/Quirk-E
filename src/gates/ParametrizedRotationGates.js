@@ -58,11 +58,17 @@ function configurableRotationDrawer(pattern, xyz, tScale) {
  * @param {!GateDrawParams} args
  */
 function exponent_to_A_len_painter(args) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
     let v = args.getGateContext('Input Range A');
     let denom_exponent = v === undefined ? 'ⁿ' : Util.digits_to_superscript_digits('' + v.length);
     let symbol = args.gate.symbol.replace('ⁿ', denom_exponent);
-    GatePainting.paintBackground(args);
-    GatePainting.paintOutline(args);
+    // Fill the gate with the configured fill color
+    args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_COLOR : Config.DEFAULT_FILL_COLOR);
+    // Highlight the gate if needed (when `args.isHighlighted` is true)
+    if (args.isHighlighted) {
+        args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+    }
+    args.painter.strokeRect(args.rect, 'black');
     GatePainting.paintGateSymbol(args, symbol);
 }
 
@@ -291,11 +297,40 @@ function angleClicker(quantityName) {
     };
 }
 
+function DRAW_GATE(args, x, y, textTemplate) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
+    let xScale = [1, 0.5, -1][x];
+    let yScale = [1, 1, -0.5][y];
+    if (args.isInToolbox) {
+        args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_COLOR : Config.DEFAULT_FILL_COLOR);
+        if(args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+        }
+    }
+    let text = textTemplate;
+    if (!args.isInToolbox) {
+        text = text.split('f(t)').join(args.gate.param);
+        args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_COLOR : Config.DEFAULT_FILL_COLOR);
+        if(args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.LOGICAL_AND_PARITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+        }
+    }
+    GatePainting.paintOutline(args);
+    GatePainting.paintGateSymbol(args, text, text.indexOf('^') !== -1);
+    GatePainting.paintGateButton(args);
+
+    let isStable = args.gate.stableDuration() === Infinity;
+    if ((!args.isInToolbox || args.isHighlighted) && !isStable) {
+        let rads = Math.PI * parseTimeFormula(args.gate.param, args.stats.time*2-1, false) || 0;
+        GatePainting.paintCycleState(args, rads, xScale, yScale);
+    }
+}
+
 ParametrizedRotationGates.FormulaicRotationX = new GateBuilder().
     setSerializedIdAndSymbol("X^ft").
     setTitle("Formula X Rotation").
     setBlurb("Rotates around X by an amount determined by a formula.").
-    setDrawer(configurableRotationDrawer('X^f(t)', 0, Math.PI)).
+    setDrawer(args => DRAW_GATE(args, 0, 0, 'X^f(t)')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("X gate's exponent")).
@@ -311,7 +346,7 @@ ParametrizedRotationGates.FormulaicRotationY = new GateBuilder().
     setSerializedIdAndSymbol("Y^ft").
     setTitle("Formula Y Rotation").
     setBlurb("Rotates around Y by an amount determined by a formula.").
-    setDrawer(configurableRotationDrawer('Y^f(t)', 1, Math.PI)).
+    setDrawer(args => DRAW_GATE(args, 1, 1, 'Y^f(t)')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("Y gate's exponent")).
@@ -327,7 +362,7 @@ ParametrizedRotationGates.FormulaicRotationZ = new GateBuilder().
     setSerializedIdAndSymbol("Z^ft").
     setTitle("Formula Z Rotation").
     setBlurb("Rotates around Z by an amount determined by a formula.").
-    setDrawer(configurableRotationDrawer('Z^f(t)', 2, Math.PI)).
+    setDrawer(args => DRAW_GATE(args, 2, 2, 'Z^f(t)')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("Z gate's exponent")).
@@ -343,7 +378,7 @@ ParametrizedRotationGates.FormulaicRotationRx = new GateBuilder().
     setSerializedIdAndSymbol("Rxft").
     setTitle("Formula Rx Gate").
     setBlurb("Rotates around X by an angle in radians determined by a formula.").
-    setDrawer(configurableRotationDrawer('Rx(f(t))', 0, 1)).
+    setDrawer(args => DRAW_GATE(args, 0, 1, 'Rx(f(t))')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("Rx gate's angle in radians")).
@@ -356,7 +391,7 @@ ParametrizedRotationGates.FormulaicRotationRy = new GateBuilder().
     setSerializedIdAndSymbol("Ryft").
     setTitle("Formula Ry Gate").
     setBlurb("Rotates around Y by an angle in radians determined by a formula.").
-    setDrawer(configurableRotationDrawer('Ry(f(t))', 1, 1)).
+    setDrawer(args => DRAW_GATE(args, 1, 1, 'Ry(f(t))')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("Ry gate's angle in radians")).
@@ -369,7 +404,7 @@ ParametrizedRotationGates.FormulaicRotationRz = new GateBuilder().
     setSerializedIdAndSymbol("Rzft").
     setTitle("Formula Rz Gate").
     setBlurb("Rotates around Z by an angle in radians determined by a formula.").
-    setDrawer(configurableRotationDrawer('Rz(f(t))', 2, 1)).
+    setDrawer(args => DRAW_GATE(args, 2, 1, 'Rz(f(t))')).
     setWidth(2).
     setExtraDisableReasonFinder(badFormulaDetector).
     setOnClickGateFunc(angleClicker("Rz gate's angle in radians")).

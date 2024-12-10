@@ -25,6 +25,7 @@ import {modulusTooBigChecker} from "./ModularIncrementGates.js"
 import {BIG_MUL_MOD_SHADER_CODE} from "./MultiplyAccumulateGates.js"
 import {Util} from "../base/Util.js"
 import {WglArg} from "../webgl/WglArg.js"
+import {GatePainting} from "../draw/GatePainting.js"
 
 let ModularMultiplicationGates = {};
 
@@ -214,6 +215,31 @@ const MODULAR_POWER_MULTIPLICATION_SHADER = ketShaderPermute(
         return big_mul_mod(out_id, f, modulus);
     `);
 
+function DRAW_GATE (args) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
+    if (args.isInToolbox) {
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+        
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintGateSymbol(args);
+    }
+    else {
+        args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+        args.painter.strokeRect(args.rect);
+        GatePainting.paintResizeTab(args);
+        GatePainting.paintGateSymbol(args);
+    }
+}
+
 ModularMultiplicationGates.TimesAModRFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setSerializedId("*AmodR" + span).
     setSymbol("×A\nmod R").
@@ -225,7 +251,8 @@ ModularMultiplicationGates.TimesAModRFamily = Gate.buildFamily(1, 16, (span, bui
     setExtraDisableReasonFinder(modulusTooBigChecker("R", span)).
     setActualEffectToShaderProvider(ctx => MODULAR_MULTIPLICATION_SHADER.withArgs(
         ...ketArgs(ctx, span, ['A', 'R']))).
-    setKnownEffectToParametrizedPermutation(modularMultiply));
+    setKnownEffectToParametrizedPermutation(modularMultiply).
+    setDrawer(args => DRAW_GATE(args)));
 
 ModularMultiplicationGates.TimesAModRInverseFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setAlternateFromFamily(ModularMultiplicationGates.TimesAModRFamily).
@@ -239,7 +266,8 @@ ModularMultiplicationGates.TimesAModRInverseFamily = Gate.buildFamily(1, 16, (sp
     setExtraDisableReasonFinder(modulusTooBigChecker("R", span)).
     setActualEffectToShaderProvider(ctx => MODULAR_INVERSE_MULTIPLICATION_SHADER.withArgs(
         ...ketArgs(ctx, span, ['A', 'R']))).
-    setKnownEffectToParametrizedPermutation(modularUnmultiply));
+    setKnownEffectToParametrizedPermutation(modularUnmultiply).
+    setDrawer(args => DRAW_GATE(args)));
 
 ModularMultiplicationGates.TimesBToTheAModRFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setSerializedId("*BToAmodR" + span).
@@ -253,7 +281,8 @@ ModularMultiplicationGates.TimesBToTheAModRFamily = Gate.buildFamily(1, 16, (spa
     setActualEffectToShaderProvider(ctx => MODULAR_POWER_MULTIPLICATION_SHADER.withArgs(
         ...ketArgs(ctx, span, ['A', 'B', 'R']),
         WglArg.float('factor', +1))).
-    setKnownEffectToParametrizedPermutation((t, a, b, r) => modularPowerMultiply(t, b, a, r)));
+    setKnownEffectToParametrizedPermutation((t, a, b, r) => modularPowerMultiply(t, b, a, r)).
+    setDrawer(args => DRAW_GATE(args)));
 
 ModularMultiplicationGates.TimesInverseBToTheAModRFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setAlternateFromFamily(ModularMultiplicationGates.TimesBToTheAModRFamily).
@@ -268,8 +297,9 @@ ModularMultiplicationGates.TimesInverseBToTheAModRFamily = Gate.buildFamily(1, 1
     setActualEffectToShaderProvider(ctx => MODULAR_POWER_MULTIPLICATION_SHADER.withArgs(
         ...ketArgs(ctx, span, ['A', 'B', 'R']),
         WglArg.float('factor', -1))).
-    setKnownEffectToParametrizedPermutation((t, a, b, r) => modularPowerMultiply(t, b, -a, r)));
-
+    setKnownEffectToParametrizedPermutation((t, a, b, r) => modularPowerMultiply(t, b, -a, r)).
+    setDrawer(args => DRAW_GATE(args)));
+    
 ModularMultiplicationGates.all = [
     ...ModularMultiplicationGates.TimesAModRFamily.all,
     ...ModularMultiplicationGates.TimesAModRInverseFamily.all,

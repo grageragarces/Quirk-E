@@ -18,17 +18,48 @@ import {GateBuilder} from "../circuit/Gate.js"
 import {Matrix} from "../math/Matrix.js"
 import {Point} from "../math/Point.js"
 import {GatePainting} from "../draw/GatePainting.js"
+import {Config} from "../Config.js"
 
 const NeGate = new GateBuilder().
     setSerializedId("NeGate").
     setTitle("Ne-Gate").
+    setSymbol("—").
     setBlurb("Negates all amplitudes.").
     setDrawer(args => {
-        GatePainting.paintLocationIndependentFrame(args);
-        let {x, y} = args.rect.center();
-        args.painter.strokeLine(new Point(x - 6, y), new Point(x + 6, y), 'black', 2);
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        if (args.isInToolbox && !args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+            GatePainting.paintOutline(args);
+            let {x, y} = args.rect.center();
+            args.painter.strokeLine(new Point(x - 6, y), new Point(x + 6, y), 'black', 2);
+            return;
+        }
+        if (args.isInToolbox && args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+            GatePainting.paintOutline(args);
+            let {x, y} = args.rect.center();
+            args.painter.strokeLine(new Point(x - 6, y), new Point(x + 6, y), 'black', 2);
+            return;
+        }
+        if (!args.isInToolbox && !args.isHighlighted) {
+            args.painter.trace(tracer => GatePainting.traceLocationIndependentOutline(args, tracer)).
+            thenFill(isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR).
+            thenStroke('black');
+            let {x, y} = args.rect.center();
+            args.painter.strokeLine(new Point(x - 6, y), new Point(x + 6, y), 'black', 2);
+        }
+        if (!args.isInToolbox && args.isHighlighted) {
+            args.painter.trace(tracer => GatePainting.traceLocationIndependentOutline(args, tracer)).
+            thenFill(isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR).
+            thenStroke('black');
+            let {x, y} = args.rect.center();
+            args.painter.strokeLine(new Point(x - 6, y), new Point(x + 6, y), 'black', 2);
+        }
     }).
     setKnownEffectToMatrix(Matrix.square(-1, 0, 0, -1)).
     gate;
 
 export {NeGate}
+
+
+

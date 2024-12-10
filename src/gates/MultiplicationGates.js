@@ -21,6 +21,8 @@ import {
     modularUnmultiply,
     MODULAR_INVERSE_SHADER_CODE
 } from "./ModularMultiplicationGates.js"
+import {Config} from "../Config.js"
+import {GatePainting} from "../draw/GatePainting.js"
 
 let MultiplicationGates = {};
 
@@ -53,6 +55,31 @@ const INVERSE_MULTIPLICATION_SHADER = ketShaderPermute(
         return big_mul_mod(out_id, input_a, span);
     `);
 
+function DRAW_GATE (args) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
+    if (args.isInToolbox) {
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+        
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintGateSymbol(args);
+    }
+    else {
+        args.painter.fillRect(args.rect, isColored ? Config.MATH_COLOR : Config.DEFAULT_FILL_COLOR);
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.MATH_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+        args.painter.strokeRect(args.rect);
+        GatePainting.paintResizeTab(args);
+        GatePainting.paintGateSymbol(args);
+    }
+}
+
 MultiplicationGates.TimesAFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setSerializedId("*A" + span).
     setSymbol("×A").
@@ -61,7 +88,8 @@ MultiplicationGates.TimesAFamily = Gate.buildFamily(1, 16, (span, builder) => bu
         "No effect if the input is even (would be irreversible).").
     setRequiredContextKeys("Input Range A").
     setActualEffectToShaderProvider(ctx => MULTIPLICATION_SHADER.withArgs(...ketArgs(ctx, span, ['A']))).
-    setKnownEffectToParametrizedPermutation((x, a) => modularMultiply(x, a, 1<<span)));
+    setKnownEffectToParametrizedPermutation((x, a) => modularMultiply(x, a, 1<<span)).
+    setDrawer(args => DRAW_GATE(args)));
 
 MultiplicationGates.TimesAInverseFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setAlternateFromFamily(MultiplicationGates.TimesAFamily).
@@ -72,7 +100,8 @@ MultiplicationGates.TimesAInverseFamily = Gate.buildFamily(1, 16, (span, builder
         "No effect if the input is even (would be irreversible).").
     setRequiredContextKeys("Input Range A").
     setKnownEffectToParametrizedPermutation((x, a) => modularUnmultiply(x, a, 1<<span)).
-    setActualEffectToShaderProvider(ctx => INVERSE_MULTIPLICATION_SHADER.withArgs(...ketArgs(ctx, span, ['A']))));
+    setActualEffectToShaderProvider(ctx => INVERSE_MULTIPLICATION_SHADER.withArgs(...ketArgs(ctx, span, ['A']))).
+    setDrawer(args => DRAW_GATE(args)));
 
 MultiplicationGates.all = [
     ...MultiplicationGates.TimesAFamily.all,

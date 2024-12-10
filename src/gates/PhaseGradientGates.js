@@ -16,6 +16,7 @@
 
 import {Config} from "../Config.js";
 import {Gate} from "../circuit/Gate.js"
+import {GateBuilder} from "../circuit/Gate.js"
 import {GatePainting} from "../draw/GatePainting.js"
 import {ketArgs, ketShaderPhase} from "../circuit/KetShaderUtil.js"
 import {MUL_STEP} from "./MultiplyAccumulateGates.js"
@@ -54,7 +55,20 @@ PhaseGradientGates.PhaseGradientFamily = Gate.buildFamily(1, 16, (span, builder)
     setActualEffectToShaderProvider(ctx => PHASE_GRADIENT_SHADER.withArgs(
         ...ketArgs(ctx, span),
         WglArg.float("factor", Math.PI / (1 << span)))).
-    setKnownEffectToPhaser(k => k / (2 << span)));
+    setKnownEffectToPhaser(k => k / (2 << span)).
+    setDrawer(args => {
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+        GatePainting.paintGateSymbol(args);
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintResizeTab(args);
+    }));
 
 PhaseGradientGates.PhaseDegradientFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setAlternateFromFamily(PhaseGradientGates.PhaseGradientFamily).
@@ -65,7 +79,20 @@ PhaseGradientGates.PhaseDegradientFamily = Gate.buildFamily(1, 16, (span, builde
     setActualEffectToShaderProvider(ctx => PHASE_GRADIENT_SHADER.withArgs(
         ...ketArgs(ctx, span),
         WglArg.float("factor", -Math.PI / (1 << span)))).
-    setKnownEffectToPhaser(k => -k / (2 << span)));
+    setKnownEffectToPhaser(k => -k / (2 << span)).
+    setDrawer(args => {
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+        GatePainting.paintGateSymbol(args);
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintResizeTab(args);
+    }));
 
 PhaseGradientGates.DynamicPhaseGradientFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setSerializedId("grad^t" + span).
@@ -79,7 +106,24 @@ PhaseGradientGates.DynamicPhaseGradientFamily = Gate.buildFamily(1, 16, (span, b
         1 << span,
         k => Complex.polar(1, t * 2 * Math.PI * k))).
     promiseEffectOnlyPhases().
-    setDrawer(GatePainting.makeCycleDrawer(-1, -1, 1, -Math.PI / 2)));
+    setDrawer(args => {
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+            GatePainting.paintCycleState(args, args.stats.time * 2 * Math.PI * 1, -1, -1, -Math.PI / 2);
+        }
+        GatePainting.paintGateSymbol(args);
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintResizeTab(args);
+
+        if(!args.inInToolbox) {
+            GatePainting.paintCycleState(args, args.stats.time * 2 * Math.PI * 1, -1, -1, -Math.PI / 2);
+        }
+    }));
 
 PhaseGradientGates.DynamicPhaseDegradientFamily = Gate.buildFamily(1, 16, (span, builder) => builder.
     setAlternateFromFamily(PhaseGradientGates.DynamicPhaseGradientFamily).
@@ -94,7 +138,25 @@ PhaseGradientGates.DynamicPhaseDegradientFamily = Gate.buildFamily(1, 16, (span,
         1 << span,
         k => Complex.polar(1, t * 2 * Math.PI * -k))).
     promiseEffectOnlyPhases().
-    setDrawer(GatePainting.makeCycleDrawer(1, -1, 1, Math.PI / 2)));
+    setDrawer(GatePainting.makeCycleDrawer(1, -1, 1, Math.PI / 2)).
+    setDrawer(args => {
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+            GatePainting.paintCycleState(args, args.stats.time * 2 * Math.PI * 1, 1, -1, Math.PI / 2);
+        }
+        GatePainting.paintGateSymbol(args);
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintResizeTab(args);
+
+        if(!args.inInToolbox) {
+            GatePainting.paintCycleState(args, args.stats.time * 2 * Math.PI * 1, 1, -1, Math.PI / 2);
+        }
+    }));
 
 PhaseGradientGates.all = [
     ...PhaseGradientGates.PhaseGradientFamily.all,

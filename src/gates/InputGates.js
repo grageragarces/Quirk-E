@@ -17,6 +17,7 @@
 import {Gate, GateBuilder} from "../circuit/Gate.js"
 import {GatePainting} from "../draw/GatePainting.js"
 import {reverseShaderForSize} from "./ReverseBitsGate.js"
+import {Config} from "../Config.js"
 
 let InputGates = {};
 
@@ -26,13 +27,22 @@ let InputGates = {};
  * @param {!boolean} reverse
  */
 function drawInputGate(args, key, reverse) {
-    GatePainting.paintBackground(args, '#DDD', '#DDD');
+    const isColored = localStorage.getItem('colored_ui') === 'true';
+    GatePainting.paintBackground(args, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+    GatePainting.paintOutline(args);
+
     if (args.isInToolbox) {
-        GatePainting.paintOutline(args);
-    } else {
-        args.painter.strokeRect(args.rect, '#888');
+        GatePainting.paintResizeTab(args);
     }
-    GatePainting.paintResizeTab(args);
+    
+    if(args.isHighlighted) {
+        args.painter.fillRect(args.rect, isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+        args.painter.strokeRect(args.rect, 'black');
+    }
+
+    if (!args.isInToolbox) {
+        GatePainting.paintResizeTab(args);
+    }
 
     let {x, y} = args.rect.center();
     args.painter.print(
@@ -91,14 +101,39 @@ let makeSetInputGate = key => new GateBuilder().
         sticky: true
     }]).
     setDrawer(args => {
-        GatePainting.paintLocationIndependentFrame(args, '#EEE', '#EEE');
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        GatePainting.paintLocationIndependentFrame(args, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+        if (args.isInToolbox) {
+            let r = args.rect.shiftedBy(0.5, 0.5);
+            args.painter.strokeLine(r.topRight(), r.bottomRight());
+            args.painter.strokeLine(r.bottomLeft(), r.bottomRight());
+        }
+        args.painter.strokeRect(args.rect, 'black');
         if (args.isInToolbox) {
             GatePainting.paintGateSymbol(args, `${key}=#\ndefault`);
         } else {
             GatePainting.paintGateSymbol(args, `${key}=${args.gate.param}`);
         }
         GatePainting.paintGateButton(args);
-    }).
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+            if (args.isInToolbox) {
+                let r = args.rect.shiftedBy(0.5, 0.5);
+                args.painter.strokeLine(r.topRight(), r.bottomRight());
+                args.painter.strokeLine(r.bottomLeft(), r.bottomRight());
+            }
+            args.painter.strokeRect(args.rect, 'black');
+            if (args.isInToolbox) {
+                GatePainting.paintGateSymbol(args, `${key}=#\ndefault`);
+            } else {
+                GatePainting.paintGateSymbol(args, `${key}=${args.gate.param}`);
+            }
+            GatePainting.paintGateButton(args);
+    }}).
     setOnClickGateFunc(oldGate => {
         let txt = prompt(`Enter new fallback value for input ${key} (between 0 and 65535).`,
             '' + oldGate.param);

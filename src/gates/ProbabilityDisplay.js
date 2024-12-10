@@ -1,3 +1,4 @@
+// TODO: Highlight color not working in toolbox
 /**
  * Copyright 2017 Google Inc.
  *
@@ -293,14 +294,34 @@ function singleChangeGateMaker(builder) {
     return shared_chanceGateMaker(builder).
         setSerializedId("Chance").
         markAsDrawerNeedsSingleQubitDensityStats().
-        setDrawer(GatePainting.makeDisplayDrawer(args => {
+        setDrawer(args => {
+            const isColored = localStorage.getItem('colored_ui') === 'true';
+            if (args.positionInCircuit === undefined) {
+                args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+                GatePainting.paintOutline(args);
+                GatePainting.paintResizeTab(args);
+                GatePainting.paintGateSymbol(args);
+                if (args.isHighlighted) {
+                    args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+                    GatePainting.paintOutline(args);
+                    GatePainting.paintGateSymbol(args);
+                }
+                return;
+            }
+            
+            GatePainting.paintResizeTab(args);
+        
+            if (args.isHighlighted) {
+                args.painter.strokeRect(args.rect, 'black', 1.5);
+            }
+
             let {row, col} = args.positionInCircuit;
             MathPainter.paintProbabilityBox(
                 args.painter,
                 args.stats.controlledWireProbabilityJustAfter(row, col),
                 args.rect,
                 args.focusPoints);
-        }));
+        });
 }
 
 let ProbabilityDisplayFamily = Gate.buildFamily(1, 16, (span, builder) =>

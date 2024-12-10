@@ -172,14 +172,35 @@ function drawDetector(args, axis) {
  * @param {!GateDrawParams} args
  */
 function drawHighlight(args) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
     // Can't use the typical highlight function because the detector has no box outline.
-    if (args.isHighlighted || args.isInToolbox) {
+    if (args.isInToolbox) {
         args.painter.fillRect(
             args.rect,
-            args.isHighlighted ? Config.HIGHLIGHTED_GATE_FILL_COLOR : Config.GATE_FILL_COLOR);
+            isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+        GatePainting.paintOutline(args);
+    }
+    if (args.isHighlighted) {
+        args.painter.fillRect(
+            args.rect,
+            isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
         GatePainting.paintOutline(args);
     }
 }
+
+function addTransparencyToHex(hexColor, alpha) {
+    // Ensure the input is a valid 6-character hex
+    if (!/^#([0-9A-Fa-f]{6})$/.test(hexColor)) {
+        throw new Error("Invalid hex color format. Expected #RRGGBB.");
+    }
+    let alphaHex = Math.round(alpha * 255).toString(16).padStart(2, "0"); // Convert alpha to hex
+    return hexColor + alphaHex; // Append alpha to the hex color
+}
+
+const isColored = localStorage.getItem('colored_ui') === 'true';
+// Usage
+let color = isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR; 
+let transparentColor = addTransparencyToHex(color, 0.5);
 
 /**
  * @param {!GateDrawParams} args
@@ -196,7 +217,7 @@ function drawWedge(args, axis) {
     args.painter.trace(trace => {
         trace.ctx.arc(x, y, r, τ*3/4, τ/4);
         trace.ctx.lineTo(x, y - r - 1);
-    }).thenStroke('black', 2).thenFill(Config.TIME_DEPENDENT_HIGHLIGHT_COLOR);
+    }).thenStroke('black', 2).thenFill(transparentColor);
     args.painter.printLine(axis, args.rect, 0.5, undefined, undefined, undefined, 0.5);
 }
 
@@ -251,21 +272,52 @@ function drawClick(args, axis) {
  * @param {!string} axis
  */
 function drawControlBulb(args, axis) {
+    const isColored = localStorage.getItem('colored_ui') === 'true';
     redrawControlWires(args);
     let p = args.rect.center();
     switch (axis) {
         case 'X':
-            args.painter.fillCircle(p, 5);
-            args.painter.strokeCircle(p, 5);
-            args.painter.strokeLine(p.offsetBy(0, -5), p.offsetBy(0, +5));
-            args.painter.strokeLine(p.offsetBy(-5, 0), p.offsetBy(+5, 0));
+            if (args.isHighlighted) {
+                args.painter.fillCircle(p, 5, isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+                args.painter.strokeCircle(p, 5);
+                args.painter.strokeLine(p.offsetBy(0, -5), p.offsetBy(0, +5));
+                args.painter.strokeLine(p.offsetBy(-5, 0), p.offsetBy(+5, 0));
+            }
+            else if (args.isInToolbox && !args.isHighlighted) {
+                args.painter.fillCircle(p, 5, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+                args.painter.strokeCircle(p, 5);
+                args.painter.strokeLine(p.offsetBy(0, -5), p.offsetBy(0, +5));
+                args.painter.strokeLine(p.offsetBy(-5, 0), p.offsetBy(+5, 0));
+            }
+            else {
+                args.painter.fillCircle(p, 5);
+                args.painter.strokeCircle(p, 5);
+                args.painter.strokeLine(p.offsetBy(0, -5), p.offsetBy(0, +5));
+                args.painter.strokeLine(p.offsetBy(-5, 0), p.offsetBy(+5, 0));
+            }
             break;
         case 'Y':
-            args.painter.fillCircle(p, 5);
-            args.painter.strokeCircle(p, 5);
-            let r = 5*Math.sqrt(0.5)*1.1;
-            args.painter.strokeLine(p.offsetBy(+r, -r), p.offsetBy(-r, +r));
-            args.painter.strokeLine(p.offsetBy(-r, -r), p.offsetBy(+r, +r));
+            if (args.isHighlighted) {
+                args.painter.fillCircle(p, 5, isColored ? Config.SAMPLING_AND_PROBABILITY_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR);
+                args.painter.strokeCircle(p, 5);
+                let r = 5*Math.sqrt(0.5)*1.1;
+                args.painter.strokeLine(p.offsetBy(+r, -r), p.offsetBy(-r, +r));
+                args.painter.strokeLine(p.offsetBy(-r, -r), p.offsetBy(+r, +r));
+            }
+            else if (args.isInToolbox && !args.isHighlighted) {
+                args.painter.fillCircle(p, 5, isColored ? Config.SAMPLING_AND_PROBABILITY_COLOR : Config.DEFAULT_FILL_COLOR);
+                args.painter.strokeCircle(p, 5);
+                let r = 5*Math.sqrt(0.5)*1.1;
+                args.painter.strokeLine(p.offsetBy(+r, -r), p.offsetBy(-r, +r));
+                args.painter.strokeLine(p.offsetBy(-r, -r), p.offsetBy(+r, +r));
+            }
+            else {
+                args.painter.fillCircle(p, 5);
+                args.painter.strokeCircle(p, 5);
+                let r = 5*Math.sqrt(0.5)*1.1;
+                args.painter.strokeLine(p.offsetBy(+r, -r), p.offsetBy(-r, +r));
+                args.painter.strokeLine(p.offsetBy(-r, -r), p.offsetBy(+r, +r));
+            }
             break;
         case 'Z':
             args.painter.fillCircle(p, 5, "black");

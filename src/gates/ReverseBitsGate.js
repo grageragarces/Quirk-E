@@ -18,6 +18,7 @@ import {Config} from "../Config.js"
 import {Gate} from "../circuit/Gate.js"
 import {ketArgs, ketShaderPermute} from "../circuit/KetShaderUtil.js"
 import {Seq} from "../base/Seq.js"
+import {GatePainting} from "../draw/GatePainting.js"
 
 let _generateReverseShaderForSize = span => span < 2 ? undefined : ketShaderPermute(
     '',
@@ -45,6 +46,19 @@ let ReverseBitsGateFamily = Gate.buildFamily(2, 16, (span, builder) => builder.
     setSymbol("Reverse").
     setTitle("Reverse Order").
     setBlurb("Swaps bits into the opposite order.").
+    setDrawer(args => {
+        const isColored = localStorage.getItem('colored_ui') === 'true';
+        // Fill the gate with the configured fill color
+        args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_COLOR : Config.DEFAULT_FILL_COLOR);
+    
+        // Highlight the gate if needed (when `args.isHighlighted` is true)
+        if (args.isHighlighted) {
+            args.painter.fillRect(args.rect, isColored ? Config.VISUALIZATION_AND_PROBES_HIGHLIGHT : Config.HIGHLIGHTED_GATE_FILL_COLOR, 2);
+        }
+        GatePainting.paintGateSymbol(args);
+        args.painter.strokeRect(args.rect, 'black');
+        GatePainting.paintResizeTab(args);
+    }).
     setKnownEffectToBitPermutation(i => span - 1 - i).
     setActualEffectToShaderProvider(reverseShaderForSize(span)));
 
