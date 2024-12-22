@@ -49,6 +49,8 @@ import {GatePainting} from "./draw/GatePainting.js"
 import {GATE_CIRCUIT_DRAWER} from "./ui/DisplayedCircuit.js"
 import {GateColumn} from "./circuit/GateColumn.js";
 import {Point} from "./math/Point.js";
+import {initImports} from "./ui/imports.js";
+
 initSerializer(
     GatePainting.LABEL_DRAWER,
     GatePainting.MATRIX_DRAWER,
@@ -425,6 +427,7 @@ canvasDiv.addEventListener('mouseleave', () => {
 let obsIsAnyOverlayShowing = new ObservableSource();
 initUrlCircuitSync(revision);
 initExports(revision, mostRecentStats, obsIsAnyOverlayShowing.observable());
+initImports(revision, mostRecentStats, obsIsAnyOverlayShowing.observable());
 initForge(revision, obsIsAnyOverlayShowing.observable());
 initUndoRedo(revision, obsIsAnyOverlayShowing.observable());
 initClear(revision, obsIsAnyOverlayShowing.observable());

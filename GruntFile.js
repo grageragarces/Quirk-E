@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const { option } = require('grunt');
 var path = require('path');
 
 module.exports = function(grunt) {
@@ -170,16 +171,20 @@ module.exports = function(grunt) {
         var errPart = grunt.file.read('html/error.partial.html');
         var forgePart = grunt.file.read('html/forge.partial.html');
         var exportPart = grunt.file.read('html/export.partial.html');
+        var importPart = grunt.file.read('html/import.partial.html');
+        var quantumCircuit = grunt.file.read("node_modules/quantum-circuit/dist/quantum-circuit.min.js")
         var menuPart = grunt.file.read('html/menu.partial.html');
         var contextMenuPart = grunt.file.read('html/context.partial.html');
         var circuitGalleryPart = grunt.file.read('html/circuits.partial.html');
         var output = html;
         output = output.split("<!-- INCLUDE SOURCE PART -->").join(js);
+        output = output.split("<!-- INCLUDE QUANTUM CIRCUIT -->").join(quantumCircuit);
         output = output.split("<!-- INCLUDE MENU PART -->").join(menuPart);
         output = output.split("<!-- INCLUDE CIRCUITS PART -->").join(circuitGalleryPart);
         output = output.split("<!-- INCLUDE ERROR PART -->").join(errPart);
         output = output.split("<!-- INCLUDE FORGE PART -->").join(forgePart);
         output = output.split("<!-- INCLUDE EXPORT PART -->").join(exportPart);
+        output = output.split("<!-- INCLUDE IMPORT PART -->").join(importPart);
         output = output.split("<!-- INCLUDE CONTEXT PART -->").join(contextMenuPart);
         grunt.file.write(dst, output);
     });

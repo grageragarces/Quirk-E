@@ -16,7 +16,6 @@
 
 import {Config} from "../Config.js"
 import {ObservableValue} from "../base/Obs.js"
-import {Serializer} from "../circuit/Serializer.js"
 import {selectAndCopyToClipboard} from "../browser/Clipboard.js"
 import {fromJsonText_CircuitDefinition} from "../circuit/Serializer.js"
 import {saveFile} from "../browser/SaveFile.js"
