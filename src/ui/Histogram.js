@@ -185,7 +185,7 @@ class Histogram {
         painter.ctx.fillText('Output state', textBoxRect.x + titleMargin, textBoxRect.y + titleMargin + 4);
         painter.ctx.restore();
     
-        // Formatted string anbd outputstate value as text
+        // Formatted string and output state value as text
         let outputState = stats.finalState
             .getColumn(0)
             .map((amplitude, index) => `${amplitude.toString(new Format(false, 0, 5, ''))}`)
