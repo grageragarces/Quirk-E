@@ -172,9 +172,11 @@ module.exports = function(grunt) {
         var exportPart = grunt.file.read('html/export.partial.html');
         var menuPart = grunt.file.read('html/menu.partial.html');
         var contextMenuPart = grunt.file.read('html/context.partial.html');
+        var circuitGalleryPart = grunt.file.read('html/circuits.partial.html');
         var output = html;
         output = output.split("<!-- INCLUDE SOURCE PART -->").join(js);
         output = output.split("<!-- INCLUDE MENU PART -->").join(menuPart);
+        output = output.split("<!-- INCLUDE CIRCUITS PART -->").join(circuitGalleryPart);
         output = output.split("<!-- INCLUDE ERROR PART -->").join(errPart);
         output = output.split("<!-- INCLUDE FORGE PART -->").join(forgePart);
         output = output.split("<!-- INCLUDE EXPORT PART -->").join(exportPart);
@@ -195,7 +197,7 @@ module.exports = function(grunt) {
         'bootstrap-get-packages:src/main.js:out/tmp/traceur/bootstrap_post_src/run_main.js',
         'concat:concat-traceur-src',
         'uglify:uglify-concatenated-src',
-        'inject-js-into-html:html/quirk.template.html:out/tmp/minified-src.js:out/quirk.html',
+        'inject-js-into-html:html/quirk.template.html:out/tmp/minified-src.js:out/quirk-e.html',
         'clean:clean-tmp'
     ]);
     grunt.registerTask('build-debug', [
@@ -203,7 +205,7 @@ module.exports = function(grunt) {
         'traceur:translate-src',
         'bootstrap-get-packages:src/main.js:out/tmp/traceur/bootstrap_post_src/run_main.js',
         'concat:concat-traceur-src',
-        'inject-js-into-html:html/quirk.template.html:out/tmp/concatenated-src.js:out/quirk.html',
+        'inject-js-into-html:html/quirk.template.html:out/tmp/concatenated-src.js:out/quirk-e.html',
         'clean:clean-tmp'
     ]);
     grunt.registerTask('build-test', [
