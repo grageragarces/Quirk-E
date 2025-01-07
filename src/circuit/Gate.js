@@ -36,6 +36,8 @@ class Gate {
         this.width = 1;
         /** @type {!int} The number of wires the gate spans on a circuit. */
         this.height = 1;
+        /** @type {undefined|{uncontrolled: string, controlled: string|undefined, params: *, controlled_params: *}} */
+        this.exportOptions = undefined;
         /** @type {undefined|!string|!number|!Array} A custom value that gets serialized.
          *     Each gate may use it to determine behavior. */
         this.param = undefined;
@@ -278,6 +280,7 @@ class Gate {
     _copy() {
         let g = new Gate();
         g.symbol = this.symbol;
+        g.exportOptions = this.exportOptions;
         g.name = this.name;
         g.blurb = this.blurb;
         g.alternate = this.alternate;
@@ -506,6 +509,19 @@ class GateBuilder {
      */
     setSymbol(symbol) {
         this.gate.symbol = symbol;
+        return this;
+    }
+    
+    /**
+     * Sets gate options for quantum-circuit export.
+     * @param {!string} uncontrolled
+     * @param {!string|undefined} controlled
+     * @param {*} controlled_params
+     * @param {*} params
+     * @returns {!GateBuilder}
+     */
+    setExportOptions(uncontrolled, controlled, controlled_params, params) {
+        this.gate.exportOptions = { uncontrolled, controlled, controlled_params, params };
         return this;
     }
 

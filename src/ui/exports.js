@@ -19,6 +19,7 @@ import {ObservableValue} from "../base/Obs.js"
 import {selectAndCopyToClipboard} from "../browser/Clipboard.js"
 import {fromJsonText_CircuitDefinition} from "../circuit/Serializer.js"
 import {saveFile} from "../browser/SaveFile.js"
+import CircuitConverter, { UnimplementedCircuitError, UnsupportedGateError } from "../circuit/CircuitConverter.js"
 
 const exportsIsVisible = new ObservableValue(false);
 const obsExportsIsShowing = exportsIsVisible.observable().whenDifferent();
@@ -124,6 +125,39 @@ function initExports(revision, mostRecentStats, obsIsAnyOverlayShowing) {
             () => {
                 let raw = JSON.stringify(mostRecentStats.get().toReadableJson(!excludeAmps.checked), null, ' ');
                 return raw.replace(/{\s*"r": /g, '{"r":').replace(/,\s*"i":\s*([-e\d\.]+)\s*}/g, ',"i":$1}');
+            });
+    })();
+    
+    (() => {
+        const outputTextElement = /** @type {HTMLPreElement} */ document.getElementById('export-circuit-formats-pre');
+        const copyButton = /** @type {HTMLPreElement} */ document.getElementById("export-circuit-format");
+        const copyResultElement = /** @type {HTMLElement} */ document.getElementById('export-format-result');
+        const exportError = /** @type {HTMLElement} */ document.getElementById('export-format-error');
+        const exportFormatSelect = /** @type {string} */ document.getElementById("export-format-select");
+        obsIsAnyOverlayShowing.subscribe(_ => {
+            outputTextElement.innerText = '[not generated yet]';
+            exportError.innerText = '';
+        });
+        setupButtonElementCopyToClipboard(
+            copyButton,
+            outputTextElement,
+            copyResultElement,
+            () => { // TODO: herror handling here
+                let result = '[not generated yet]';
+                try {
+                    const converter = new CircuitConverter(fromJsonText_CircuitDefinition(revision.peekActiveCommit()));
+                    result = converter.exportToFormat(exportFormatSelect.value);
+                }
+                catch(err) {
+                    if(err instanceof UnsupportedGateError || err instanceof UnimplementedCircuitError) {
+                        exportError.innerText = err.message + "\n";
+                    } 
+                    else {
+                        exportError.innerText = "Unknown error. Check console for details.\n";
+                        console.error(err);
+                    }
+                }
+                return result;
             });
     })();
 

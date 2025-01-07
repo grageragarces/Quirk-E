@@ -62,6 +62,7 @@ VariousYGates.Y3i = new GateBuilder().
 VariousYGates.Y4 = new GateBuilder().
     setSerializedIdAndSymbol("Y^¼").
     setTitle("Y^¼ Gate").
+    setExportOptions("ry", "cry", { theta: "pi/4"}, { theta: "pi/4" }).
     setBlurb("Principle fourth root of Y.").
     setDrawer(args => {
         const isColored = localStorage.getItem('colored_ui') === 'true';
@@ -81,6 +82,7 @@ VariousYGates.Y4 = new GateBuilder().
 VariousYGates.Y4i = new GateBuilder().
     setSerializedIdAndSymbol("Y^-¼").
     setTitle("Y^-¼ Gate").
+    setExportOptions("ry", "cry", { theta: "-pi/4"}, { theta: "-pi/4" }).
     setBlurb("Adjoint fourth root of Y.").
     setDrawer(args => {
         const isColored = localStorage.getItem('colored_ui') === 'true';

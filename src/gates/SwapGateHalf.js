@@ -20,6 +20,7 @@ import {Matrix} from "../math/Matrix.js"
 import {Rect} from "../math/Rect.js"
 import {Seq} from "../base/Seq.js"
 import {Config} from "../Config.js"
+import {Gate} from "../circuit/Gate.js"
 
 // Note: there is special code to handle swaps sprinkled everywhere, since it's the only gate with two paired sides.
 
@@ -27,6 +28,7 @@ import {Config} from "../Config.js"
 let SwapGateHalf = new GateBuilder().
     setSerializedIdAndSymbol("Swap").
     setTitle("Swap Gate [Half]").
+    setExportOptions("swap").
     setBlurb("Swaps the values of two qubits.\n(Place two in the same column.)").
     setKnownEffectToMatrix(Matrix.square(
         1, 0, 0, 0,

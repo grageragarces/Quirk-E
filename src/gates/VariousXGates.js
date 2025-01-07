@@ -61,6 +61,7 @@ VariousXGates.X3i = new GateBuilder().
     VariousXGates.X4 = new GateBuilder().
     setSerializedIdAndSymbol("X^¼").
     setTitle("X^¼ Gate").
+    setExportOptions("rx", "crx", { theta: "pi/4"}, { theta: "pi/4" }).
     setBlurb("Principle fourth root of X.").
     setDrawer(args => {
         const isColored = localStorage.getItem('colored_ui') === 'true';
@@ -76,6 +77,7 @@ VariousXGates.X3i = new GateBuilder().
 
 VariousXGates.X4i = new GateBuilder().
     setSerializedIdAndSymbol("X^-¼").
+    setExportOptions("rx", "crx", { theta: "-pi/4"}, { theta: "-pi/4" }).
     setTitle("X^-¼ Gate").
     setBlurb("Adjoint fourth root of X.").
     setDrawer(args => {

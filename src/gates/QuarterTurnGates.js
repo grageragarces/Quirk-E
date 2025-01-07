@@ -25,6 +25,7 @@ let QuarterTurnGates = {};
 QuarterTurnGates.SqrtXForward = new GateBuilder().
     setSerializedIdAndSymbol('X^½').
     setTitle("√X Gate").
+    setExportOptions("srn", "csrn").
     setBlurb("Principle square root of Not.").
     setKnownEffectToMatrix(Matrix.fromPauliRotation(0.25, 0, 0)).
     setDrawer(args => {
@@ -44,6 +45,7 @@ QuarterTurnGates.SqrtXForward = new GateBuilder().
 /** @type {!Gate} */
 QuarterTurnGates.SqrtXBackward = new GateBuilder().
     setAlternate(QuarterTurnGates.SqrtXForward).
+    setExportOptions("srndg", "crx", { theta: "-pi/2" }).
     setSerializedIdAndSymbol('X^-½').
     setTitle("X^-½ Gate").
     setBlurb("Adjoint square root of Not.").
@@ -66,6 +68,7 @@ QuarterTurnGates.SqrtXBackward = new GateBuilder().
 QuarterTurnGates.SqrtYForward = new GateBuilder().
     setSerializedIdAndSymbol('Y^½').
     setTitle("√Y Gate").
+    setExportOptions("ry", "cry",  { theta: "pi/2" }, { theta: "pi/2" }).
     setBlurb("Principle square root of Y.").
     setKnownEffectToMatrix(Matrix.fromPauliRotation(0, 0.25, 0)).
     setDrawer(args => {
@@ -87,6 +90,7 @@ QuarterTurnGates.SqrtYBackward = new GateBuilder().
     setAlternate(QuarterTurnGates.SqrtYForward).
     setSerializedIdAndSymbol('Y^-½').
     setTitle("Y^-½ Gate").
+    setExportOptions("ry", "cry",  { theta: "-pi/2" }, { theta: "-pi/2" }).
     setBlurb("Adjoint square root of Y.").
     setKnownEffectToMatrix(Matrix.fromPauliRotation(0, 0.75, 0)).
     setDrawer(args => {
@@ -108,6 +112,7 @@ QuarterTurnGates.SqrtZForward = new GateBuilder().
     setSerializedId('Z^½').
     setSymbol('S').
     setTitle("√Z Gate").
+    setExportOptions("s", "cr2").
     setBlurb("Principle square root of Z.\nAlso known as the 'S' gate.").
     setKnownEffectToMatrix(Matrix.fromPauliRotation(0, 0, 0.25)).
     setDrawer(args => {
@@ -129,6 +134,7 @@ QuarterTurnGates.SqrtZBackward = new GateBuilder().
     setAlternate(QuarterTurnGates.SqrtZForward).
     setSerializedId('Z^-½').
     setSymbol('S^-1').
+    setExportOptions("sdg", "csdg").
     setTitle("Z^-½ Gate").
     setBlurb("Adjoint square root of Z.").
     setKnownEffectToMatrix(Matrix.fromPauliRotation(0, 0, 0.75)).
