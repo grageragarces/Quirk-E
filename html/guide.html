@@ -256,6 +256,33 @@
                     <div class="section-title">Slicer / barrier</div>
                     <p>Slicer gate is added in order to make the circuit editing visually better. With slicer gate, circuit can be divided into steps or parts, making the circuit more readable.</p>
                 </div>
+
+                <div class="section">
+                    <div class="section-title">Import</div>
+                    <p>Quirk-E supports importing quantum circuits from the Quirk-E JSON format as well as from the following formats:</p>
+                    <ul>
+                        <li>OpenQASM 2.0</li>
+                        <li>Quil 2.0</li>
+                        <li>Qiskit Qobj</li>
+                        <li>IONQ</li>
+                    </ul>
+                    <p>To import a circuit click on the import button in the menu bar and select a format using the dropdown.
+                </div>
+                
+                <div class="section">
+                    <div class="section-title" id="export">Export</div>
+                    <p>Apart from exporting the internal JSON representation of all circuits Quirk-E supports exporting limited set of quantum circuits to many other popular formats.</p>
+                    <p>Currently circuits with columns containing the following gates can be exported:</p>
+                    <ul>
+                        <li>Half-turn gates without controls or with one control</li>
+                        <li>Quarter-turn gates without controls or with one control</li>
+                        <li>Eight-turn gates without controls or with one control</li>
+                        <li>The uncontrolled swap gate</li>
+                        <li>The Toffoli (CCNOT) gate</li>
+                    </ul>
+                    <p>Both importing and exporting are internally handled by the <a href="https://github.com/quantastica/quantum-circuit">quantum-circuit</a> library.</p>
+                </div>
+                
             </div>
             <div class="images">
                 <img id="darkUI" src="../doc/quirk-e-dark.png" alt="dark user interface">

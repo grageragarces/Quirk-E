@@ -13,7 +13,7 @@ function initImports(revision, mostRecentStats, obsIsAnyOverlayShowing) {
         // Due to horrors of Grunt, I have decided to include QuantumCircuit
         // in an external script tag. This is horrible, sorry. However, it works.
         const circuit = new QuantumCircuit();
-        let type = document.getElementById("import-circuit-type").value;
+        let type = document.getElementById("import-format-select").value;
         let input = document.getElementById("import-circuit-textarea").value;
         let error_message = document.getElementById("import-error-message");
         let error = false;
@@ -40,8 +40,13 @@ function initImports(revision, mostRecentStats, obsIsAnyOverlayShowing) {
         }
         
         if(!error) {
-            revision.commit(circuit_json);
-            importsIsVisible.set(false);
+            try {
+                revision.commit(circuit_json);
+                importsIsVisible.set(false);
+            } catch(err) {
+                error = true;
+                console.error(err);
+            }
         }
         error_message.style.display = error ? "block" : "none";
     }
