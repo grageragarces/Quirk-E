@@ -24,8 +24,11 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 - **Output state visualization and copying** is implemented below the histogram.
 - **Dark and light modes** are added for enhancing the developer experience. These settings can be changed in the **UI Settings menu**.
 - **Multi-colored, yellow-colored, and black & white UI coloring options** are available to take into account different user needs and use cases. These settings can be changed in the **UI Settings menu**.
-- **UI enhancements** are made in order to make developer experience better.
+- **UI enhancements** are made in order to make developer experience better. Dialogs and buttons have unified style across the simulator interface.
 - **Drag and Drop Barrier (Slicer)** for quantum circuits, enabling precise control over circuit execution flow by defining explicit synchronization points.
+- **Download options** for downloading a picture of the circuit are added, currently supporting png, jpg, svg, webp and pdf.
+- **Import** for importing circuits from other formats is added. Import currently supports Quirk-E JSON, QASM 2.0, QUIL 2.0, Qiskit Qobj and IONQ (JSON).
+- **Export** functionality for exporting circuits from Quirk-E to other formats is added. Export currently supports OpenQASM 2.0, Qiskit, PyQuil, Quil, Cirq, QuEST, QSharp, Qobj, Tensorflow Quantum and Braket.
 
 ![Added features showed in light, multi-colored UI](https://github.com/DEQSE-Project/Quirk-E/blob/main/quirk-e-light.png)
 
