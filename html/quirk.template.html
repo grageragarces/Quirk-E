@@ -51,9 +51,13 @@
                 const exportWebpButton = document.getElementById('export-webp-button');
                 const exportSvgButton = document.getElementById('export-svg-button');
                 const exportPdfButton = document.getElementById('export-pdf-button');
+                const inspectorButton = document.getElementById("enable-inspector-button");
+                const inspectorMenu = document.getElementById("circuit-inspector-menu");
+                const inspectorButtons = document.querySelectorAll("#circuit-inspector button");
 
-                let btns = [uiSettingsButton, downloadOptionsButton, importButton, exportButton, clearAllButton, clearCircuitButton, undoButton, redoButton, gateForgeButton, aboutButton, guideButton, circuitsButton, exportJpgButton, exportPngButton, exportWebpButton, exportSvgButton, exportPdfButton];
-
+                let btns = [uiSettingsButton, downloadOptionsButton, importButton, exportButton, clearAllButton, clearCircuitButton, undoButton, redoButton, gateForgeButton, aboutButton, guideButton, circuitsButton, exportJpgButton, exportPngButton, exportWebpButton, exportSvgButton, exportPdfButton, inspectorButton, ...inspectorButtons];
+                let menus = [uiSettingsMenu, downloadOptionsMenu, inspectorMenu];
+                
                 downloadOptionsButton.addEventListener('click', () => {
                     const isDownloadOptionsVisible = downloadOptionsMenu.style.display === 'block';
 
@@ -115,11 +119,12 @@
                                 btns[i].style.backgroundColor = '#303030';
                             };
                         }
+                        
+                        menus.forEach(menu => {
+                            menu.style.backgroundColor = "#bbbbbb";
+                            menu.style.border = '1px solid #aaaaaa';
+                        });
 
-                        uiSettingsMenu.style.backgroundColor = '#bbbbbb';
-                        uiSettingsMenu.style.border = '1px solid #aaaaaa'
-                        downloadOptionsMenu.style.backgroundColor = '#bbbbbb';
-                        downloadOptionsMenu.style.border = '1px solid #aaaaaa'
                     } else {
                         document.body.style.backgroundColor = 'white'; // Light mode background
                         sunImage.style.opacity = '1'; // Highlight sun
@@ -204,7 +209,7 @@
         <!-- Primary content -->
         <div id="inspectorDiv" style="display: none">
             <!-- Buttons -->
-            <div style="margin: 5px; height: auto; overflow: hidden; display: flex; align-items: center;">
+            <div id="menu-row" style="margin: 5px; height: auto; overflow: hidden; display: flex; align-items: center;">
                 &nbsp;
                 &nbsp;
                 <div style="position: relative; top: 2px;">
@@ -406,6 +411,14 @@
                 </button>
                 &nbsp;
                 &nbsp;
+                <button id="enable-inspector-button" style="min-width: 50px; min-height: 30px; border-radius: 10px;">
+                    <div style="padding: 2px;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Inspector
+                    </div>
+                </button>
+                &nbsp;
+                &nbsp;
                 <button id="gate-forge-button" style="min-width: 50px; min-height: 30px; border-radius: 10px;">
                     <div style="padding: 2px;">
                         <i class="fa-solid fa-plus"></i>
@@ -430,6 +443,8 @@
             
             <!-- INCLUDE CONTEXT PART -->
         </div>
+
+        <!-- INCLUDE INSPECTOR PART -->
 
         <!-- INCLUDE CIRCUITS PART -->
 
