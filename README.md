@@ -29,6 +29,7 @@ This work has been supported by the Academy of Finland (project DEQSE 349945).
 - **Download options** for downloading a picture of the circuit are added, currently supporting png, jpg, svg, webp and pdf.
 - **Import** for importing circuits from other formats is added. Import currently supports Quirk-E JSON, QASM 2.0, QUIL 2.0, Qiskit Qobj and IONQ (JSON).
 - **Export** functionality for exporting circuits from Quirk-E to other formats is added. Export currently supports OpenQASM 2.0, Qiskit, PyQuil, Quil, Cirq, QuEST, QSharp, Qobj, Tensorflow Quantum and Braket.
+- **Inspector** allows user to control the flow of the circuit by playing it step by stepping, stepping between individual steps, and skipping to the beginning or end state of the circuit.
 
 ![Added features showed in light, multi-colored UI](https://github.com/DEQSE-Project/Quirk-E/blob/main/quirk-e-light.png)
 
