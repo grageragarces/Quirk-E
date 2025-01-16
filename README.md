@@ -1,39 +1,39 @@
 # Quirk-E
-<a href="https://quirk-e.dev/" target="_blank">Quirk-E</a> is an open-source quantum circuit simulator built as an extension of the original Quirk in [ [1](https://github.com/Strilanc/Quirk) ] platform. Quirk-E has been developed as part of the <strong>Developer Experience in Iterative Quantum Software Engineering (DEQSE)</strong> project by the <a href="https://www.jyu.fi/en/research-groups/empirical-software-engineering-research" target="_blank">Empirical Software Engineering Research Team</a> and the <a href="https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team" target="_blank">QIC Team</a> at the <a href="https://www.jyu.fi/en" target="_blank">University of Jyväskylä</a>, Finland.
 
-The Quirk-E tool, which has been presented in [ [2] (https://doi.org/) ], adds more functionalities to the Quirk [ [1](https://github.com/Strilanc/Quirk) ] quantum circuit simulator.
+[Quirk-E](https://quirk-e.dev) is an open-source quantum circuit simulator built as an extension of the original Quirk [[1](https://github.com/Strilanc/Quirk)] platform. Quirk-E has been developed as part of the <strong>Developer Experience in Iterative Quantum Software Engineering (DEQSE)</strong> project by the [Empirical Software Engineering Research Team](https://www.jyu.fi/en/research-groups/empirical-software-engineering-research) and the [QIC Team](https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team) at the [University of Jyväskylä](https://www.jyu.fi/en) in Finland.
 
-The Quirk-E is free to use and modify. However, you must add reference #[ [2] (https://doi.org/) ] in case of any publication.
+The Quirk-E tool, which is presented in [[2](https://doi.org/), *Will be updated...*], adds more functionalities to the Quirk [[1](https://github.com/Strilanc/Quirk)] quantum circuit simulator.
 
-Quirk-E is also embedded in the DEQSE Visual Studio Code Extension, designed to enhance the quantum software development experience. The extension is available for download from <a href="https://github.com/DEQSE-Project/deqse-vscode-extension" target="_blank">GitHub</a> and <a href="https://marketplace.visualstudio.com/publishers/jyuqicteam" target="_blank">Microsoft Marketplace</a>.
+Quirk-E is free-to-use and to modify. However, you must add reference [[2](https://doi.org/), *Will be updated...*] in case of any publication.
 
-<br>
+Quirk-E is also embedded in the DEQSE Visual Studio Code Extension, designed to enhance the quantum software development experience. The extension is available for download from [GitHub](https://github.com/DEQSE-Project/deqse-vscode-extension) and [Visual Studio Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam).
+
 Access Quirk-E via:
 
 - **Web Browser:** [quirk-e.dev](https://quirk-e.dev/)
 
-- **DEQSE Visual Studio Code Extension:** [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Microsoft Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam) 
+- **DEQSE Visual Studio Code Extension:** [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Visual Studio Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam) 
 
-This work has been supported by the Academy of Finland (project DEQSE 349945).
+This work was supported by the Research Council of Finland [grant number [349945](https://research.fi/en/results/funding/70030)].
 
 # Features
 
 - **Dependencies have been updated** resolving several vulnerabilities caused by out-of-date packages.
-- **Right Click Menu for gates** is added. It has "Duplicate" and "Delete" options.
+- **Right-Click menu for gates** is added. It has "Duplicate" and "Delete" options.
 - **Probability distribution histogram** is added.
 - **Output state visualization and copying** is implemented below the histogram.
 - **Dark and light modes** are added for enhancing the developer experience. These settings can be changed in the **UI Settings menu**.
 - **Multi-colored, yellow-colored, and black & white UI coloring options** are available to take into account different user needs and use cases. These settings can be changed in the **UI Settings menu**.
-- **UI enhancements** are made in order to make developer experience better. Dialogs and buttons have unified style across the simulator interface.
-- **Drag and Drop Barrier (Slicer)** for quantum circuits, enabling precise control over circuit execution flow by defining explicit synchronization points.
-- **Download options** for downloading a picture of the circuit are added, currently supporting png, jpg, svg, webp and pdf.
-- **Import** for importing circuits from other formats is added. Import currently supports Quirk-E JSON, QASM 2.0, QUIL 2.0, Qiskit Qobj and IONQ (JSON).
-- **Export** functionality for exporting circuits from Quirk-E to other formats is added. Export currently supports OpenQASM 2.0, Qiskit, PyQuil, Quil, Cirq, QuEST, QSharp, Qobj, Tensorflow Quantum and Braket.
+- **UI enhancements** are made in order to make developer experience better. Dialogs and buttons have a unified style across the simulator interface.
+- **Drag and drop barrier (Slicer)** for quantum circuits, enabling precise control over circuit execution flow by defining explicit synchronization points.
+- **Download option** for downloading an image of the circuit is added, currently supporting PNG, JPEG, SVG, WebP, and PDF.
+- **Import** functionality for importing circuits from other formats is added. Import currently supports Quirk-E JSON, OpenQASM 2.0, QUIL 2.0, Qiskit Qobj, and IonQ (JSON).
+- **Export** functionality for exporting circuits to other formats is added. Export currently supports OpenQASM 2.0, Qiskit, PyQuil, Quil, Cirq, QuEST, QSharp, Qobj, Tensorflow Quantum, and Braket.
 - **Inspector** allows user to control the flow of the circuit by playing it step by stepping, stepping between individual steps, and skipping to the beginning or end state of the circuit.
 
-![Added features showed in light, multi-colored UI](https://github.com/DEQSE-Project/Quirk-E/blob/main/quirk-e-light.png)
+![Added features showed in light, multi-colored UI](doc/README_quirk-e-light.png)
 
-![Additional added features showed in dark, yellow-colored UI](https://github.com/DEQSE-Project/Quirk-E/blob/main/quirk-e-dark.png)
+![Additional added features showed in dark, yellow-colored UI](doc/README_quirk-e-dark.png)
 
 # Known issues
 
@@ -57,9 +57,10 @@ Confirm the output works by opening out/quirk.html with a web browser.
 
 # Contributors
 
-- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)), *University of Jyväskylä*
-- Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)), *University of Jyväskylä*
-- Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)), *University of Jyväskylä*
+- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)) - *University of Jyväskylä*
+- Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)) - *University of Jyväskylä*
+- Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)) - *University of Jyväskylä*
+- Julian Fuchs ([@julian-fuchs](https://github.com/julian-fuchs)) - *University of Jyväskylä, Hasso Plattner Institute / University of Potsdam*
 
 # Contact
 
@@ -69,6 +70,4 @@ Majid Haghparast <<majid.m.haghparast@jyu.fi>>
 
 [1] https://github.com/Strilanc/Quirk
 
-[2] https://doi.org/ (WILL BE UPDATED)
-
-
+[2] https://doi.org/ (*Will be updated...*)

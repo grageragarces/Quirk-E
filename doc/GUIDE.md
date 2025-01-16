@@ -2,13 +2,10 @@
 
 ## Introduction
 
-[Quirk-E](https://quirk-e.dev/) is an open-source quantum circuit simulator built as an extension of the original [Quirk](https://github.com/Strilanc/Quirk) platform.  
-Quirk-E has been developed as part of the **Developer Experience in Iterative Quantum Software Engineering (DEQSE)** project by the [Empirical Software Engineering Research Team](https://www.jyu.fi/en/research-groups/empirical-software-engineering-research) and the [QIC Team](https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team) at the [University of Jyväskylä](https://www.jyu.fi/en), Finland.
+[Quirk-E](https://quirk-e.dev) is an open-source quantum circuit simulator built as an extension of the original [Quirk](https://github.com/Strilanc/Quirk) platform.  
+Quirk-E has been developed as part of the **Developer Experience in Iterative Quantum Software Engineering (DEQSE)** project by the [Empirical Software Engineering Research Team](https://www.jyu.fi/en/research-groups/empirical-software-engineering-research) and the [QIC Team](https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team) at the [University of Jyväskylä](https://www.jyu.fi/en) in Finland.
 
-The Quirk-E tool adds more functionalities to the Quirk quantum circuit simulator.  
-Quirk-E is free to use and modify, but you must provide reference in case of any publication.  
-Quirk-E is also embedded in the DEQSE Visual Studio Code Extension, designed to enhance the quantum software development experience.  
-The extension is available for download from [GitHub](https://github.com/DEQSE-Project/deqse-vscode-extension) and [Microsoft Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam).
+The Quirk-E tool adds more functionalities to the Quirk quantum circuit simulator. Quirk-E is free-to-use and modify, but you must provide reference in case of any publication. Quirk-E is also embedded in the DEQSE Visual Studio Code Extension, designed to enhance the quantum software development experience. The extension is available for download from [GitHub](https://github.com/DEQSE-Project/deqse-vscode-extension) and [Visual Studio Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam).
 
 ## Quirk User Guide
 
@@ -16,9 +13,7 @@ Since Quirk-E is developed on top of the original Quirk, the [Quirk User Guide](
 
 ## Right-click Menu
 
-By right-clicking a gate on a circuit, you will open a context menu. In that menu, you have two options: duplicate gate and delete gate.  
-When you press the *Duplicate* button, the same gate appears next to the current gate.  
-When you press the *Delete* button, the gate is deleted from the circuit.
+By right-clicking a gate on a circuit, you will open a context menu. In that menu, you have two options: duplicate gate and delete gate. When you press the *Duplicate* button, the same gate appears next to the current gate. When you press the *Delete* button, the gate is deleted from the circuit.
 
 ## Probability Distribution Histogram
 
@@ -26,8 +21,7 @@ Below the circuit, there is a probability distribution histogram. The histogram 
 
 ## Output State
 
-Below the histogram, there is a text box for the output state. It shows the complete output state as an array.  
-In the box's top right corner, there is an icon button for copying the output state. The output state is copied to the clipboard in the same format as shown in the text box.
+Below the histogram, there is a text box for the output state. It shows the complete output state as an array. In the box's top right corner, there is an icon button for copying the output state. The output state is copied to the clipboard in the same format as shown in the text box.
 
 ## UI Customization
 
@@ -63,8 +57,8 @@ The **Slicer gate** is added to enhance circuit readability. With the slicer gat
 
 **Dark Mode UI:**
 
-![Dark UI](../doc/quirk-e-dark.png)
+![Dark UI](../doc/README_quirk-e-dark.png)
 
 **Light Mode UI:**
 
-![Light UI](../doc/quirk-e-light.png)
+![Light UI](../doc/README_quirk-e-light.png)
