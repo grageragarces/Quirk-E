@@ -12,7 +12,7 @@ Access Quirk-E via:
 
 - **Web Browser:** [quirk-e.dev](https://quirk-e.dev/)
 
-- **DEQSE Visual Studio Code Extension:** [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Visual Studio Marketplace](https://marketplace.visualstudio.com/publishers/jyuqicteam) 
+- **DEQSE Visual Studio Code Extension:** [GitHub Repository](https://github.com/DEQSE-Project/deqse-vscode-extension) | [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=JYUQICTeam.deqse)
 
 This work was supported by the Research Council of Finland [grant number [349945](https://research.fi/en/results/funding/70030)].
 
