@@ -101,6 +101,7 @@ class StepByStepInspector {
     }
     
     disable() {
+        this.pause();
         this.displayedInspector.set(this.displayedInspector.get()
             .withCircuitDefinition(this.getPreviousDefinition()));
         this.container.style.display = 'none';
