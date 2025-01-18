@@ -57,9 +57,9 @@ Confirm the output works by opening out/quirk.html with a web browser.
 
 # Contributors
 
-- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)) - *University of Jyväskylä*
 - Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)) - *University of Jyväskylä*
 - Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)) - *University of Jyväskylä*
+- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)) - *University of Jyväskylä*
 - Julian Fuchs ([@julian-fuchs](https://github.com/julian-fuchs)) - *University of Jyväskylä, Hasso Plattner Institute / University of Potsdam*
 
 # Contact
