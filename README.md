@@ -1,6 +1,6 @@
 # Quirk-E
 
-[Quirk-E](https://quirk-e.dev) is an open-source quantum circuit simulator built as an extension of the original Quirk [[1](https://github.com/Strilanc/Quirk)] platform. Quirk-E has been developed as part of the <strong>Developer Experience in Iterative Quantum Software Engineering (DEQSE)</strong> project by the [Empirical Software Engineering Research Team](https://www.jyu.fi/en/research-groups/empirical-software-engineering-research) and the [QIC Team](https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team) at the [University of Jyväskylä](https://www.jyu.fi/en) in Finland.
+[Quirk-E](https://quirk-e.dev) is an open-source quantum circuit simulator built as an extension of the original Quirk [[1](https://github.com/Strilanc/Quirk)] platform. Quirk-E has been developed as part of the <strong>Developer Experience in Iterative Quantum Software Engineering (DEQSE)</strong> project by the [Empirical Software Engineering Research Team](https://www.jyu.fi/en/research-groups/empirical-software-engineering-research) and the [QIC Team](https://www.jyu.fi/en/research-groups/quantum-information-and-computation-team) at the [University of Jyvaskyla](https://www.jyu.fi/en) in Finland.
 
 The Quirk-E tool, which is presented in [[2](https://doi.org/), *Will be updated...*], adds more functionalities to the Quirk [[1](https://github.com/Strilanc/Quirk)] quantum circuit simulator.
 
@@ -57,10 +57,10 @@ Confirm the output works by opening out/quirk.html with a web browser.
 
 # Contributors
 
-- Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)) - *University of Jyväskylä*
-- Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)) - *University of Jyväskylä*
-- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)) - *University of Jyväskylä*
-- Julian Fuchs ([@julian-fuchs](https://github.com/julian-fuchs)) - *University of Jyväskylä, Hasso Plattner Institute / University of Potsdam*
+- Samuel Ovaskainen ([@0wsk](https://github.com/0wsk)) - *University of Jyvaskyla*
+- Majid Haghparast ([@MajidHaghparast](https://github.com/MajidHaghparast)) - *University of Jyvaskyla*
+- Ronja Heikkinen ([@ronjahoo](https://github.com/ronjahoo)) - *University of Jyvaskyla*
+- Julian Fuchs ([@julian-fuchs](https://github.com/julian-fuchs)) - *University of Jyvaskyla, Hasso Plattner Institute / University of Potsdam*
 
 # Contact
 
