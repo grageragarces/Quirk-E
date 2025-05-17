@@ -21,7 +21,7 @@
     "karma-chrome-launcher": "~3.2.0",
     "karma-firefox-launcher": "~2.1.3",
     "puppeteer": "^22.12.1",
-    "quantum-circuit": "^0.9.226",
+    "quantum-circuit": "^0.9.238",
     "traceur": "0.0.111"
   },
   "scripts": {
