@@ -51,6 +51,7 @@ import {Point} from "./math/Point.js";
 import {initImports} from "./ui/imports.js";
 import {initImageExports} from "./ui/imageExports.js";
 import StepByStepInspector from "./ui/stepBystepInspector.js";
+import { initDistributeUI, obsDistributeIsShowing } from "./ui/distribute.js";
 
 initSerializer(
     GatePainting.LABEL_DRAWER,
@@ -437,14 +438,15 @@ initClear(revision, obsIsAnyOverlayShowing.observable());
 initGallery(revision, obsIsAnyOverlayShowing.observable());
 initTitleSync(revision);
 initImageExports(displayed);
-obsForgeIsShowing.
-    zipLatest(obsExportsIsShowing, (e1, e2) => e1 || e2).
-    zipLatest(obsGalleryIsShowing, (e1, e2) => e1 || e2).
-    whenDifferent().
-    subscribe(e => {
-        obsIsAnyOverlayShowing.send(e);
-        canvasDiv.tabIndex = e ? -1 : 0;
-    });
+obsForgeIsShowing
+  .zipLatest(obsExportsIsShowing, (a, b) => a || b)
+  .zipLatest(obsGalleryIsShowing, (a, b) => a || b)
+  .zipLatest(obsDistributeIsShowing, (a, b) => a || b)   // << add this line
+  .whenDifferent()
+  .subscribe(e => {
+    obsIsAnyOverlayShowing.send(e);
+    canvasDiv.tabIndex = e ? -1 : 0;
+  });
 
 // If the webgl initialization is going to fail, don't fail during the module loading phase.
 haveLoaded = true;

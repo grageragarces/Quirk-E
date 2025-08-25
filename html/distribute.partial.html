@@ -1,0 +1,18 @@
+<!-- html/distribute.partial.html -->
+
+<div id="distribute-overlay"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000"></div>
+
+<div id="distribute-div"
+     style="display:none;position:fixed;left:50%;top:30%;transform:translateX(-50%);
+            background:#fff;border:1px solid #777;border-radius:8px;z-index:1001;
+            width:360px;box-shadow:0 8px 24px rgba(0,0,0,0.25);padding:16px">
+  <div style="font-weight:bold;margin-bottom:8px">Distribute circuit</div>
+  <label for="distribute-count" style="display:block;margin:8px 0 4px">Number of partitions</label>
+  <input id="distribute-count" type="number" min="1" value="2"
+         style="width:100%;padding:6px 8px;border:1px solid #aaa;border-radius:6px" />
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+    <button id="distribute-cancel" type="button">Cancel</button>
+    <button id="distribute-confirm" type="button">Partition</button>
+  </div>
+</div>

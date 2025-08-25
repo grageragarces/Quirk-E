@@ -176,6 +176,7 @@ module.exports = function(grunt) {
         var inspector = grunt.file.read("html/inspector.partial.html");
         var contextMenuPart = grunt.file.read('html/context.partial.html');
         var circuitGalleryPart = grunt.file.read('html/circuits.partial.html');
+        var distributePart = grunt.file.read('html/distribute.partial.html');
         var output = html;
         output = output.split("<!-- INCLUDE SOURCE PART -->").join(js);
         output = output.split("<!-- INCLUDE QUANTUM CIRCUIT -->").join(quantumCircuit);
@@ -186,6 +187,7 @@ module.exports = function(grunt) {
         output = output.split("<!-- INCLUDE EXPORT PART -->").join(exportPart);
         output = output.split("<!-- INCLUDE IMPORT PART -->").join(importPart);
         output = output.split("<!-- INCLUDE CONTEXT PART -->").join(contextMenuPart);
+        output = output.split("<!-- INCLUDE DISTRIBUTE PART -->").join(distributePart);
         grunt.file.write(dst, output);
     });
 

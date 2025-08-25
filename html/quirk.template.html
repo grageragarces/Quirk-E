@@ -54,8 +54,9 @@
                 const inspectorButton = document.getElementById("enable-inspector-button");
                 const inspectorMenu = document.getElementById("circuit-inspector-menu");
                 const inspectorButtons = document.querySelectorAll("#circuit-inspector button");
+                const distributeButton = document.getElementById('distribute-button');
 
-                let btns = [uiSettingsButton, downloadOptionsButton, importButton, exportButton, clearAllButton, clearCircuitButton, undoButton, redoButton, gateForgeButton, aboutButton, guideButton, circuitsButton, exportJpgButton, exportPngButton, exportWebpButton, exportSvgButton, exportPdfButton, inspectorButton, ...inspectorButtons];
+                let btns = [uiSettingsButton, downloadOptionsButton, importButton, exportButton, clearAllButton, clearCircuitButton, undoButton, redoButton, gateForgeButton, distributeButton, aboutButton, guideButton, circuitsButton, exportJpgButton, exportPngButton, exportWebpButton, exportSvgButton, exportPdfButton, inspectorButton, ...inspectorButtons];
                 let menus = [uiSettingsMenu, downloadOptionsMenu, inspectorMenu];
                 
                 downloadOptionsButton.addEventListener('click', () => {
@@ -431,6 +432,13 @@
                 </button>     
                 &nbsp;
                 &nbsp;
+                <button id="distribute-button" style="min-width: 50px; min-height: 30px; border-radius: 10px;">
+                    <div style="padding: 2px;">
+                        <i class="fa-solid fas fa-cut"></i>
+                        Distribute
+                    </div>
+                </button>
+                &nbsp;
                 <span style="color:#BBB">Quirk-E Version 3.0.0</span>           
             </div>
 
@@ -444,6 +452,8 @@
             <!-- INCLUDE IMPORT PART -->
 
             <!-- INCLUDE FORGE PART -->
+
+            <!-- INCLUDE DISTRIBUTE PART -->
             
             <!-- INCLUDE CONTEXT PART -->
         </div>
