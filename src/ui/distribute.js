@@ -3,18 +3,15 @@ import { ObservableValue } from "../base/Obs.js";
 import { initDistributeLogic } from "../distribute/distribute.js";
 
 const isVisible = new ObservableValue(false);
+const obsDistributeIsShowing = isVisible.observable().whenDifferent();
 
 /**
  * @param {!Revision} revision
  * @param {!Observable.<!boolean>} obsIsAnyOverlayShowing
- * @param {function(): string} getActiveCircuitJson  returns current circuit JSON text
  */
-export function initDistributeUI(revision, obsIsAnyOverlayShowing, getActiveCircuitJson) {
+function initDistributeUI(revision, obsIsAnyOverlayShowing) {
   // Hook the logic that does the partition+rewrite
-  initDistributeLogic({
-    revision: revision,
-    getActiveCircuit: getActiveCircuitJson
-  });
+  initDistributeLogic({ revision: revision });
 
   const btn = /** @type {!HTMLButtonElement} */(document.getElementById("distribute-button"));
   const overlay = /** @type {!HTMLDivElement} */(document.getElementById("distribute-overlay"));
@@ -50,3 +47,5 @@ export function initDistributeUI(revision, obsIsAnyOverlayShowing, getActiveCirc
     show(false);
   });
 }
+
+export { initDistributeUI, obsDistributeIsShowing };
