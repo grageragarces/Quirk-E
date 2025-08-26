@@ -185,14 +185,13 @@ function rewriteCrossPartitionGates(circuit, partOfWire) {
 
 export function initDistributeLogic(deps) {
   var revision = deps.revision;
-  var getActiveCircuit = deps.getActiveCircuit;
 
   window.addEventListener('distribute:confirm', function(ev){
     var detail = ev.detail || {};
     var Nraw = detail.count !== undefined ? detail.count : 2;
     var N = Math.max(1, parseInt(Nraw, 10) || 2);
 
-    var jsonText = getActiveCircuit();
+    var jsonText = deps.revision.peekActiveCommit();
     var circuit = fromJsonText_CircuitDefinition(jsonText);
 
     var partOfWire = greedyPartition(circuit.numWires, N);

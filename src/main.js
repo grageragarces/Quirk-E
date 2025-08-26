@@ -436,6 +436,7 @@ initForge(revision, obsIsAnyOverlayShowing.observable());
 initUndoRedo(revision, obsIsAnyOverlayShowing.observable());
 initClear(revision, obsIsAnyOverlayShowing.observable());
 initGallery(revision, obsIsAnyOverlayShowing.observable());
+initDistributeUI(revision, obsIsAnyOverlayShowing.observable());
 initTitleSync(revision);
 initImageExports(displayed);
 obsForgeIsShowing
