@@ -1,3 +1,5 @@
+console.log("Quirk-E JavaScript is running! The console is working."); // <-- ADD THIS LINE
+
 /**
  * Copyright 2017 Google Inc.
  *

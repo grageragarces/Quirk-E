@@ -1,0 +1,138 @@
+// src/distribute/distribute.js
+import { CircuitDefinition } from "../circuit/CircuitDefinition.js";
+import { GateColumn } from "../circuit/GateColumn.js";
+import { GateBuilder } from "../circuit/Gate.js";
+import { Serializer, fromJsonText_CircuitDefinition } from "../circuit/Serializer.js";
+import { CircuitConverter } from "../circuit/CircuitConverter.js";
+import { Point } from "../math/Point.js";
+
+// ---------- Gate Makers for Non-Local Operations ----------
+
+function makeNonLocalGate(name, symbol, color) {
+    return new GateBuilder()
+        .setSerializedId('~nl_' + symbol + '_' + Math.floor(Math.random() * (1 << 20)).toString(32))
+        .setSymbol(symbol)
+        .setTitle(name)
+        .setBlurb(`A component of a non-local operation.`)
+        .setDrawer(args => {
+            if (!args.rect) return; // Safety check
+            args.painter.fillRect(args.rect, args.isHighlighted ? '#FFC' : color);
+            args.painter.strokeRect(args.rect);
+            args.painter.print(
+                symbol,
+                args.rect.x + args.rect.w / 2,
+                args.rect.y + args.rect.h / 2,
+                'center', 'middle', 'black', '12px sans-serif', 100, 100
+            );
+        })
+        .gate;
+}
+
+// ---------- Partitioning and Parsing Helpers ----------
+
+function greedyPartition(numWires, N) {
+  const partOfWire = new Array(numWires);
+  const base = Math.floor(numWires / N);
+  let rem = numWires % N;
+  let w = 0;
+  for (let p = 0; p < N; p++) {
+    const size = base + (rem > 0 ? 1 : 0);
+    if (rem > 0) rem--;
+    for (let i = 0; i < size; i++) {
+      partOfWire[w++] = p;
+    }
+  }
+  return partOfWire;
+}
+
+function parseQasmAndPartition(qasm, numPartitions) {
+    let numWires = 0;
+    const lines = qasm.split('\n');
+    for (const line of lines) {
+        if (line.startsWith('qreg')) {
+            const match = line.match(/\[(\d+)\]/);
+            if (match) numWires = parseInt(match[1], 10);
+        }
+    }
+    if (numWires === 0) return [];
+    return greedyPartition(numWires, numPartitions);
+}
+
+// ---------- Core Rewriter Logic ----------
+
+function rewriteCrossPartitionGates(circuit, partOfWire) {
+  const W = circuit.columns.length;
+  const H = circuit.numWires;
+  const outCols = circuit.columns.map(c => new GateColumn(c.gates.slice()));
+
+  for (let c = 0; c < W; c++) {
+    const col = circuit.columns[c];
+    let controlWire = -1;
+    let targetWire = -1;
+    let isCnot = false;
+
+    // Find a control and target in the same column
+    for (let r = 0; r < H; r++) {
+        const g = col.gates[r];
+        if (!g) continue;
+        if (g.symbol === '•') controlWire = r;
+        if (g.symbol === 'X') { targetWire = r; isCnot = true; }
+        if (g.symbol === 'Z') targetWire = r;
+    }
+
+    // If a two-qubit gate is found, check if it crosses a partition
+    if (controlWire !== -1 && targetWire !== -1) {
+      const p1 = partOfWire[controlWire];
+      const p2 = partOfWire[targetWire];
+
+      if (p1 !== p2) {
+        console.log(`Rewriting gate at column ${c} between wires ${controlWire} and ${targetWire}`);
+        const name = isCnot ? `NL-CNOT` : `NL-CZ`;
+
+        // Replace the control and target with new 1x1 gates
+        outCols[c].gates[controlWire] = makeNonLocalGate(name, "NL-Out", "#FAB");
+        outCols[c].gates[targetWire] = makeNonLocalGate(name, "NL-In", "#AFB");
+      }
+    }
+  }
+
+  // Note: We are not adding ancilla wires in this simplified version
+  return new CircuitDefinition(circuit.numWires, outCols);
+}
+
+// ---------- Public init ----------
+
+export function initDistributeLogic(deps) {
+  console.log("Distribute logic initialized.");
+  const revision = deps.revision;
+
+  window.addEventListener('distribute:confirm', function(ev){
+    try {
+        console.log("'distribute:confirm' event received!");
+        const detail = ev.detail || {};
+        const N = Math.max(1, parseInt(detail.count, 10) || 2);
+
+        const jsonText = deps.revision.peekActiveCommit();
+        const circuit = fromJsonText_CircuitDefinition(jsonText);
+
+        if (circuit.numWires === 0) {
+            alert("Cannot partition an empty circuit!");
+            return;
+        }
+
+        const converter = new CircuitConverter();
+        const qasmString = converter.toQasm(circuit);
+        const partOfWire = parseQasmAndPartition(qasmString, N);
+        console.log("Partition assignments:", partOfWire);
+
+        const newCircuit = rewriteCrossPartitionGates(circuit, partOfWire);
+        const newJson = JSON.stringify(Serializer.toJson(newCircuit));
+        revision.commit(newJson);
+        console.log("Partitioning complete and committed.");
+
+    } catch (error) {
+        console.error("An error occurred during partitioning:", error);
+        alert("An error occurred. Check the developer console for details.");
+    }
+  });
+}
