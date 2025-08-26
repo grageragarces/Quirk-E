@@ -68,6 +68,9 @@ GatePainting.LABEL_DRAWER = args => {
  */
 GatePainting.MAKE_HIGHLIGHTED_DRAWER =
     (toolboxFillColor = Config.GATE_FILL_COLOR, normalFillColor = Config.GATE_FILL_COLOR) => args => {
+        if (args.gate.customProperties && args.gate.customProperties.isPartitionedGate) {
+            args.painter.strokeRect(args.rect, 'red', 3); // Draw a thick red border.
+        }
         const isColored = localStorage.getItem('colored_ui') === 'true';
         const isYellowMode = localStorage.getItem('yellow_mode') === 'true';
         let usedColor = Config.VISUALIZATION_AND_PROBES_COLOR;

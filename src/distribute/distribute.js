@@ -1,15 +1,11 @@
 // src/distribute/distribute.js
 import { fromJsonText_CircuitDefinition } from "../circuit/Serializer.js";
-// We will get the QASM conversion function from a different, more reliable module.
-// import { Serializer } from "../circuit/Serializer.js"; 
-// import { CircuitDefinition } from "../circuit/CircuitDefinition.js";
-import { circuitToQasm } from "../ui/exports.js";
-
+import { CircuitDefinition } from "../circuit/CircuitDefinition.js";
+import CircuitConverter from "../circuit/CircuitConverter.js";
 
 // ---------- Partitioning Helper ----------
 
 function greedyPartition(numWires, N) {
-  console.log(`Running greedy partitioner for ${numWires} wires into ${N} parts.`);
   const partOfWire = new Array(numWires);
   const base = Math.floor(numWires / N);
   let rem = numWires % N;
@@ -27,7 +23,6 @@ function greedyPartition(numWires, N) {
 // ---------- QASM Rewriter ----------
 
 function rewriteQasm(qasmString, numPartitions) {
-    console.log("Starting QASM rewrite process...");
     const lines = qasmString.split('\n');
     const newLines = [];
     let numWires = 0;
@@ -39,67 +34,59 @@ function rewriteQasm(qasmString, numPartitions) {
             const match = line.match(/\[(\d+)\]/);
             if (match) {
                 numWires = parseInt(match[1], 10);
-                console.log(`Found ${numWires} wires from 'qreg' declaration.`);
-                partOfWire = greedyPartition(numWires, numPartitions);
-                console.log("Generated partition map:", partOfWire);
+                // Cap the number of partitions to the number of wires.
+                const N = Math.min(numPartitions, numWires);
+                partOfWire = greedyPartition(numWires, N);
+                console.log(`Partitioning into ${N} parts. Map:`, partOfWire);
             }
         }
     }
 
     if (numWires === 0) {
         console.error("Could not determine the number of wires from QASM.");
-        return qasmString; // Return original if something is wrong
+        return qasmString; 
     }
 
     // Second pass: Rewrite the QASM lines.
     for (const line of lines) {
         const trimmedLine = line.trim();
-        // Look for CNOT (cx) or CZ (cz) gates
         if (trimmedLine.startsWith('cx') || trimmedLine.startsWith('cz')) {
             const match = trimmedLine.match(/q\[(\d+)\],q\[(\d+)\]/);
             if (match) {
                 const controlWire = parseInt(match[1], 10);
                 const targetWire = parseInt(match[2], 10);
-
                 const controlPart = partOfWire[controlWire];
                 const targetPart = partOfWire[targetWire];
 
-                // Check if the gate crosses a partition
+                // Check if the gate crosses a partition.
                 if (controlPart !== targetPart) {
                     const gateType = trimmedLine.startsWith('cx') ? "CNOT" : "CZ";
-                    console.log(`Found cross-partition ${gateType} on wires ${controlWire}, ${targetWire}. Rewriting.`);
+                    console.log(`Rewriting cross-partition ${gateType} on wires ${controlWire}, ${targetWire}.`);
                     
-                    // Replace with comments and placeholder single-qubit gates (u3 is a generic gate).
-                    newLines.push(`// ---- Non-Local ${gateType} Start ----`);
-                    newLines.push(`u3(0,0,0) q[${controlWire}]; // NL-Out`);
-                    newLines.push(`u3(0,0,0) q[${targetWire}]; // NL-In`);
-                    newLines.push(`// ---- Non-Local ${gateType} End ----`);
-                    continue; // Skip adding the original line
+                    // Replace with visually distinct, supported QASM commands.
+                    newLines.push(`// ---- Non-Local ${gateType} replaced ----`);
+                    newLines.push(`h q[${controlWire}]; // Placeholder for NL-Out`);
+                    newLines.push(`x q[${targetWire}]; // Placeholder for NL-In`);
+                    continue; // Skip adding the original cx/cz line.
                 }
             }
         }
-        // If it's not a cross-partition gate, keep the original line.
         newLines.push(line);
     }
 
-    const finalQasm = newLines.join('\n');
-    console.log("Rewritten QASM generated successfully.");
-    return finalQasm;
+    return newLines.join('\n');
 }
 
 
 // ---------- Public init ----------
 
 export function initDistributeLogic(deps) {
-  console.log("Distribute logic initialized.");
   const revision = deps.revision;
 
   window.addEventListener('distribute:confirm', function(ev){
     try {
-        console.log("--- 'distribute:confirm' event received ---");
         const detail = ev.detail || {};
-        const N = Math.max(1, parseInt(detail.count, 10) || 2);
-        console.log(`User requested partitioning into ${N} parts.`);
+        const N = Math.max(1, parseInt(detail.count, 10) || 1);
 
         const jsonText = revision.peekActiveCommit();
         const circuit = fromJsonText_CircuitDefinition(jsonText);
@@ -109,18 +96,15 @@ export function initDistributeLogic(deps) {
             return;
         }
 
-        // Step 1: Convert the current circuit to a QASM string using the reliable function.
-        const originalQasm = circuitToQasm(circuit);
-        console.log("Step 1: Original QASM generated.\n", originalQasm);
+        const converter = new CircuitConverter(circuit);
+        const originalQasm = converter.exportToFormat("QASM2.0");
+        console.log("Original QASM:\n", originalQasm);
 
-        // Step 2: Rewrite the QASM string based on partitions.
         const rewrittenQasm = rewriteQasm(originalQasm, N);
-        console.log("Step 2: Rewritten QASM ready.\n", rewrittenQasm);
+        console.log("Rewritten QASM:\n", rewrittenQasm);
 
-        // Step 3: Programmatically trigger the import functionality.
-        console.log("Step 3: Dispatching 'import:text' event to load new circuit.");
+        // This will now succeed because the rewritten QASM is valid.
         window.dispatchEvent(new CustomEvent('import:text', { detail: rewrittenQasm }));
-        console.log("--- Partitioning process complete ---");
 
     } catch (error) {
         console.error("An error occurred during the partitioning process:", error);
