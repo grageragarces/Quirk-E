@@ -1,10 +1,8 @@
 // src/distribute/distribute.js
 import { fromJsonText_CircuitDefinition } from "../circuit/Serializer.js";
 import { CircuitDefinition } from "../circuit/CircuitDefinition.js";
-import CircuitConverter from "../circuit/CircuitConverter.js";
 
 // ---------- Partitioning Helper ----------
-
 function greedyPartition(numWires, N) {
   const partOfWire = new Array(numWires);
   const base = Math.floor(numWires / N);
@@ -20,66 +18,7 @@ function greedyPartition(numWires, N) {
   return partOfWire;
 }
 
-// ---------- QASM Rewriter ----------
-
-function rewriteQasm(qasmString, numPartitions) {
-    const lines = qasmString.split('\n');
-    const newLines = [];
-    let numWires = 0;
-    let partOfWire = [];
-
-    // First pass: Find the number of qubits and create the partition map.
-    for (const line of lines) {
-        if (line.trim().startsWith('qreg')) {
-            const match = line.match(/\[(\d+)\]/);
-            if (match) {
-                numWires = parseInt(match[1], 10);
-                // Cap the number of partitions to the number of wires.
-                const N = Math.min(numPartitions, numWires);
-                partOfWire = greedyPartition(numWires, N);
-                console.log(`Partitioning into ${N} parts. Map:`, partOfWire);
-            }
-        }
-    }
-
-    if (numWires === 0) {
-        console.error("Could not determine the number of wires from QASM.");
-        return qasmString; 
-    }
-
-    // Second pass: Rewrite the QASM lines.
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine.startsWith('cx') || trimmedLine.startsWith('cz')) {
-            const match = trimmedLine.match(/q\[(\d+)\],q\[(\d+)\]/);
-            if (match) {
-                const controlWire = parseInt(match[1], 10);
-                const targetWire = parseInt(match[2], 10);
-                const controlPart = partOfWire[controlWire];
-                const targetPart = partOfWire[targetWire];
-
-                // Check if the gate crosses a partition.
-                if (controlPart !== targetPart) {
-                    const gateType = trimmedLine.startsWith('cx') ? "CNOT" : "CZ";
-                    console.log(`Rewriting cross-partition ${gateType} on wires ${controlWire}, ${targetWire}.`);
-                    
-                    // Replace with visually distinct, supported QASM commands.
-                    newLines.push(`// ---- Non-Local ${gateType} replaced ----`);
-                    newLines.push(`h q[${controlWire}]; // Placeholder for NL-Out`);
-                    newLines.push(`x q[${targetWire}]; // Placeholder for NL-In`);
-                    continue; // Skip adding the original cx/cz line.
-                }
-            }
-        }
-        newLines.push(line);
-    }
-
-    return newLines.join('\n');
-}
-
-
 // ---------- Public init ----------
-
 export function initDistributeLogic(deps) {
   const revision = deps.revision;
 
@@ -96,15 +35,45 @@ export function initDistributeLogic(deps) {
             return;
         }
 
-        const converter = new CircuitConverter(circuit);
-        const originalQasm = converter.exportToFormat("QASM2.0");
-        console.log("Original QASM:\n", originalQasm);
+        // Clicking the button acts as a toggle for highlighting.
+        if (window.highlightedGateLocations) {
+            window.highlightedGateLocations = undefined;
+            console.log("CLEARED highlighting.");
+        } else {
+            const H = circuit.numWires;
+            const cappedN = Math.min(N, H);
+            const partOfWire = greedyPartition(H, cappedN);
+            console.log(`Partitioning into ${cappedN} parts. Map:`, partOfWire);
 
-        const rewrittenQasm = rewriteQasm(originalQasm, N);
-        console.log("Rewritten QASM:\n", rewrittenQasm);
+            const locationsToHighlight = new Set();
+            for (let c = 0; c < circuit.columns.length; c++) {
+                const col = circuit.columns[c];
+                const controls = [], targets = [];
+                for (let r = 0; r < H; r++) {
+                    const g = col.gates[r];
+                    if (g && g.symbol === '•') controls.push(r);
+                    if (g && (g.symbol === 'X' || g.symbol === 'Z')) targets.push(r);
+                }
 
-        // This will now succeed because the rewritten QASM is valid.
-        window.dispatchEvent(new CustomEvent('import:text', { detail: rewrittenQasm }));
+                if (controls.length > 0 && targets.length > 0) {
+                    for (const controlWire of controls) {
+                        for (const targetWire of targets) {
+                            if (partOfWire[controlWire] !== partOfWire[targetWire]) {
+                                const controlId = `${c}:${controlWire}`;
+                                const targetId = `${c}:${targetWire}`;
+                                locationsToHighlight.add(controlId);
+                                locationsToHighlight.add(targetId);
+                            }
+                        }
+                    }
+                }
+            }
+            window.highlightedGateLocations = locationsToHighlight;
+            console.log("Set gates to be highlighted:", window.highlightedGateLocations);
+        }
+
+        // Force the circuit to redraw itself.
+        revision.commit(jsonText);
 
     } catch (error) {
         console.error("An error occurred during the partitioning process:", error);

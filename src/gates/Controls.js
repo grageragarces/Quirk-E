@@ -34,6 +34,20 @@ Controls.Control = new GateBuilder().
     markAsControlExpecting(true).
     promiseEffectIsUnitary().
     setDrawer(args => {
+
+        if (window.highlightedGateLocations && args.positionInCircuit) {
+            const id = `${args.positionInCircuit.col}:${args.positionInCircuit.row}`;
+            
+            // This log will confirm the function is being called for each control gate.
+            console.log(`Controls.js drawer is checking '•' at ${id}.`);
+            
+            if (window.highlightedGateLocations.has(id)) {
+                console.log(`%cHIGHLIGHTING control gate '•' at ${id}`, "color: red; font-weight: bold;");
+                // Draw a red box AROUND the control dot.
+                args.painter.strokeRect(args.rect, 'red', 3);
+            }
+        }
+
         const isColored = localStorage.getItem('colored_ui') === 'true';
         const isYellowMode = localStorage.getItem('yellow_mode') === 'true';
         let usedColor = Config.VISUALIZATION_AND_PROBES_COLOR;

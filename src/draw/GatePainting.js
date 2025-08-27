@@ -29,6 +29,21 @@ class GatePainting {}
 const GATE_SYMBOL_FONT = '16px sans-serif';
 
 GatePainting.paintOutline = args => {
+    // Highlight logic
+    if (window.highlightedGateLocations && args.positionInCircuit && args.gate) {
+        const id = `${args.positionInCircuit.col}:${args.positionInCircuit.row}`;
+        
+        // This log will confirm the function is being called for each gate.
+        console.log(`GatePainting.paintOutline is checking '${args.gate.symbol}' at ${id}.`);
+        
+        if (window.highlightedGateLocations.has(id)) {
+            console.log(`%cHIGHLIGHTING gate '${args.gate.symbol}' at ${id}`, "color: red; font-weight: bold;");
+            args.painter.strokeRect(args.rect, 'red', 3);
+            return; // Skip the normal border.
+        }
+    }
+    
+
     if (args.isInToolbox) {
         let r = args.rect.shiftedBy(0.5, 0.5);
         args.painter.strokeLine(r.topRight(), r.bottomRight());
